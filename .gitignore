@@ -1,3 +1,11 @@
+.pdm-python
+pdm.lock
+README.md
+
+docs/site
+
+/typings
+
 # Created by https://www.toptal.com/developers/gitignore/api/python,macos,linux,emacs
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,macos,linux,emacs
 

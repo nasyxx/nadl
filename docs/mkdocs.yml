@@ -1,0 +1,14 @@
+theme:
+  name: material
+site_name: nadl documents
+
+plugins:
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          annotations_path: brief
+
+nav:
+- Home : index.md
+- API : api.md
