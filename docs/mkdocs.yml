@@ -18,3 +18,8 @@ nav:
 
 watch:
 - ../src
+
+
+extra:
+  version:
+    provider: mike
