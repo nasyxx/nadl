@@ -10,10 +10,10 @@ dependencies = [
     "jax>=0.4.20",
     "jaxlib>=0.4.20",
     "numpy>=1.26.2",
-    "optax @ git+https://github.com/deepmind/optax.git",
     "rich>=13.7.0",
     "jaxtyping>=0.2.22",
     "flax>=0.7.5",
+    "optax>=0.1.7",
 ]
 requires-python = ">=3.11,<3.12"
 readme = "README.md"
