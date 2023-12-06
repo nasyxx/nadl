@@ -62,6 +62,11 @@ from .metrics import (
   roc_curve,
   support,
 )
+from .preprocessing import (
+  min_max_scaler,
+  standard_scaler,
+  normalizer,
+)
 from .utils import (
   classit,
   rle,
@@ -83,8 +88,10 @@ __all__ = [
   "from_state",
   "init_progress",
   "iou",
+  "min_max_scaler",
   "new_key",
   "next_key",
+  "normalizer",
   "precision_recall_curve",
   "precision_recall_fscore_support",
   "precision_score",
@@ -96,6 +103,7 @@ __all__ = [
   "roc_curve",
   "sigmoid_focal_loss",
   "softmax_focal_loss",
+  "standard_scaler",
   "support",
   "take",
 ]
