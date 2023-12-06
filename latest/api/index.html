@@ -392,9 +392,27 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nadl.min_max_scaler" class="md-nav__link">
+    <span class="md-ellipsis">
+      min_max_scaler()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nadl.next_key" class="md-nav__link">
     <span class="md-ellipsis">
       next_key()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.normalizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      normalizer()
     </span>
   </a>
   
@@ -494,6 +512,15 @@
   <a href="#nadl.softmax_focal_loss" class="md-nav__link">
     <span class="md-ellipsis">
       softmax_focal_loss()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.standard_scaler" class="md-nav__link">
+    <span class="md-ellipsis">
+      standard_scaler()
     </span>
   </a>
   
@@ -685,9 +712,27 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nadl.min_max_scaler" class="md-nav__link">
+    <span class="md-ellipsis">
+      min_max_scaler()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nadl.next_key" class="md-nav__link">
     <span class="md-ellipsis">
       next_key()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.normalizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      normalizer()
     </span>
   </a>
   
@@ -787,6 +832,15 @@
   <a href="#nadl.softmax_focal_loss" class="md-nav__link">
     <span class="md-ellipsis">
       softmax_focal_loss()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.standard_scaler" class="md-nav__link">
+    <span class="md-ellipsis">
+      standard_scaler()
     </span>
   </a>
   
@@ -1485,6 +1539,47 @@ license  : GPL-3.0+</p>
 
 
 
+<h2 id="nadl.min_max_scaler" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">min_max_scaler</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get min max scaler.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>nadl/preprocessing.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">min_max_scaler</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">],</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">]:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Get min max scaler.&quot;&quot;&quot;</span>
+  <span class="n">min_</span><span class="p">,</span> <span class="n">max_</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">arr</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">scaler</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scaler.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">min_</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_</span> <span class="o">-</span> <span class="n">min_</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">scaler</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
 <h2 id="nadl.next_key" class="doc doc-heading">
           <code class="highlight language-python"><span class="n">next_key</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span></code>
 
@@ -1506,6 +1601,69 @@ license  : GPL-3.0+</p>
   <span class="k">if</span> <span class="ow">not</span> <span class="n">keys</span><span class="o">.</span><span class="n">subkeys</span><span class="p">:</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
   <span class="k">return</span> <span class="n">from_state</span><span class="p">(</span><span class="n">keys</span><span class="o">.</span><span class="n">subkeys</span><span class="o">.</span><span class="n">popleft</span><span class="p">(),</span> <span class="n">keys</span><span class="o">.</span><span class="n">subkeys</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="nadl.normalizer" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">normalizer</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;l2&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get normalizer.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>nadl/preprocessing.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">normalizer</span><span class="p">(</span>
+  <span class="n">arr</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">norm</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;l1&quot;</span><span class="p">,</span> <span class="s2">&quot;l2&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;l2&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">],</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">]:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Get normalizer.&quot;&quot;&quot;</span>
+  <span class="k">match</span> <span class="n">norm</span><span class="p">:</span>
+    <span class="k">case</span> <span class="s2">&quot;l2&quot;</span><span class="p">:</span>
+      <span class="n">norm_value</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">arr</span><span class="p">)))</span>
+    <span class="k">case</span> <span class="s2">&quot;l1&quot;</span><span class="p">:</span>
+      <span class="n">norm_value</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+    <span class="k">case</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
+      <span class="n">norm_value</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+    <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;norm should be &#39;l1&#39;, &#39;l2&#39;, or &#39;max&#39;&quot;</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">scaler</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scaler.&quot;&quot;&quot;</span>
+    <span class="n">max_val</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">norm_value</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">tiny</span><span class="p">)</span>  <span class="c1"># Avoid division by zero</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">max_val</span>
+
+  <span class="k">return</span> <span class="n">scaler</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -2023,6 +2181,47 @@ license  : GPL-3.0+</p>
   <span class="n">focus</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="o">-</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span>
   <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">labels</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">focus</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
   <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="nadl.standard_scaler" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">standard_scaler</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get standard scaler.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>nadl/preprocessing.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">standard_scaler</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">],</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">]:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Get standard scaler.&quot;&quot;&quot;</span>
+  <span class="n">mean</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">arr</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">scaler</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scaler.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span>
+
+  <span class="k">return</span> <span class="n">scaler</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
