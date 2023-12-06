@@ -63,6 +63,7 @@ from .metrics import (
   support,
 )
 from .preprocessing import (
+  SCALER,
   min_max_scaler,
   standard_scaler,
   normalizer,
@@ -73,11 +74,12 @@ from .utils import (
   rle_array,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 __all__ = [
   "Keys",
   "PG",
+  "SCALER",
   "accuracy",
   "auc",
   "average_precision_score",

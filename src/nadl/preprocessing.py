@@ -39,10 +39,13 @@ from collections.abc import Callable
 import jax
 import jax.numpy as jnp
 
-from typing import Literal
+from typing import Literal, TypeAlias
 
 
-def min_max_scaler(arr: jax.Array) -> Callable[[jax.Array], jax.Array]:
+SCALER: TypeAlias = Callable[[jax.Array], jax.Array]
+
+
+def min_max_scaler(arr: jax.Array) -> SCALER:
   """Get min max scaler."""
   min_, max_ = arr.min(), arr.max()
 
@@ -53,7 +56,7 @@ def min_max_scaler(arr: jax.Array) -> Callable[[jax.Array], jax.Array]:
   return scaler
 
 
-def standard_scaler(arr: jax.Array) -> Callable[[jax.Array], jax.Array]:
+def standard_scaler(arr: jax.Array) -> SCALER:
   """Get standard scaler."""
   mean, std = arr.mean(), arr.std()
 
@@ -64,9 +67,7 @@ def standard_scaler(arr: jax.Array) -> Callable[[jax.Array], jax.Array]:
   return scaler
 
 
-def normalizer(
-  arr: jax.Array, norm: Literal["l1", "l2", "max"] = "l2"
-) -> Callable[[jax.Array], jax.Array]:
+def normalizer(arr: jax.Array, norm: Literal["l1", "l2", "max"] = "l2") -> SCALER:
   """Get normalizer."""
   match norm:
     case "l2":
