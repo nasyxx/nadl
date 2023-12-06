@@ -73,6 +73,8 @@ from .utils import (
   rle_array,
 )
 
+__version__ = "0.2.0"
+
 __all__ = [
   "Keys",
   "PG",

@@ -1,6 +1,6 @@
 [project]
 name = "nadl"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Nasy's Deep Learning Toolkit"
 authors = [
     {name = "Nasy", email = "nasyxx+python@gmail.com"},
@@ -36,6 +36,8 @@ name = "jaxlib"
 verify_ssl = true
 type = "find_links"
 
+[tool.pdm]
+version = { source = "file", path = "src/nadl/__init__.py" }
 
 [tool.pdm.dev-dependencies]
 dev = [
