@@ -46,6 +46,14 @@ from rich.progress import (
   BarColumn,
   ProgressColumn,
 )
+from rich.theme import Theme
+
+
+DEF_LIGHT_THEME = Theme({
+  "bar.back": "#50616D",
+  "bar.complete": "#EEDEB0",
+  "bar.finished": "#CCA4E3",
+})
 
 
 class PG(NamedTuple):
@@ -60,12 +68,14 @@ def init_progress(
   pg: Progress | None,
   console: Console | None,
   total: bool = True,
+  bar_width: int | None = 20,
   extra_columns: tuple[ProgressColumn, ...] = (),
   show_progress: bool = True,
+  theme: Theme | None = None,
 ) -> PG:
   """Init progress bar."""
   if console is None:
-    console = Console()
+    console = Console(theme=theme or DEF_LIGHT_THEME)
   if pg is None:
     pg = Progress(
       TextColumn(
@@ -73,9 +83,15 @@ def init_progress(
       ),
       TimeRemainingColumn(),
       TimeElapsedColumn(),
-      BarColumn(None),
+      BarColumn(bar_width),
       console=console,
       disable=not show_progress,
     )
   pg.columns = pg.columns + extra_columns
   return PG(pg, pg.console, {})
+
+
+def add_columns(pg: PG, columns: tuple[ProgressColumn, ...]) -> PG:
+  """Add columns."""
+  pg.pg.columns = pg.pg.columns + columns
+  return pg
