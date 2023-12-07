@@ -68,7 +68,7 @@ from .preprocessing import (
   min_max_scaler,
   standard_scaler,
   normalizer,
-  scaler_fn,
+  select_scaler,
 )
 from .utils import (
   classit,
@@ -76,7 +76,7 @@ from .utils import (
   rle_array,
 )
 
-__version__ = "0.2.4"
+__version__ = "0.2.5"
 
 __all__ = [
   "Keys",
@@ -108,7 +108,7 @@ __all__ = [
   "rle_array",
   "roc_auc_score",
   "roc_curve",
-  "scaler_fn",
+  "select_scaler",
   "sigmoid_focal_loss",
   "softmax_focal_loss",
   "standard_scaler",

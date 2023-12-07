@@ -45,9 +45,9 @@ from typing import Literal, TypeAlias
 SCALER: TypeAlias = Callable[[jax.Array], jax.Array]
 
 
-def identity_scaler(_arr: jax.Array, _axis: int = 0) -> SCALER:
+def identity_scaler(arr: jax.Array, axis: int = 0) -> SCALER:
   """Get identity scaler."""
-
+  del arr, axis
   def scaler(x: jax.Array) -> jax.Array:
     """Scaler."""
     return x
@@ -99,22 +99,23 @@ def normalizer(
   return scaler
 
 
-def scaler_fn(
-  method: Literal["id", "minmax", "std", "l2_norm", "l1_norm", "max_norm"] = "minmax"
+def select_scaler(
+  method: Literal["id", "minmax", "std", "l2_norm", "l1_norm", "max_norm"] = "minmax",
+  axis: int = 0,
 ) -> Callable[[jax.Array, int], SCALER]:
   """Get scaler function."""
   match method:
     case "id":
-      return identity_scaler
+      return partial(identity_scaler, axis=axis)
     case "minmax":
-      return min_max_scaler
+      return partial(min_max_scaler, axis=axis)
     case "std":
-      return standard_scaler
+      return partial(standard_scaler, axis=axis)
     case "l2_norm":
-      return partial(normalizer, norm="l2")
+      return partial(normalizer, norm="l2", axis=axis)
     case "l1_norm":
-      return partial(normalizer, norm="l1")
+      return partial(normalizer, norm="l1", axis=axis)
     case "max_norm":
-      return partial(normalizer, norm="max")
+      return partial(normalizer, norm="max", axis=axis)
     case _:
       raise ValueError(f"Unknown scaler method {method}")
