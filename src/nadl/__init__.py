@@ -64,9 +64,11 @@ from .metrics import (
 )
 from .preprocessing import (
   SCALER,
+  identity_scaler,
   min_max_scaler,
   standard_scaler,
   normalizer,
+  scaler_fn,
 )
 from .utils import (
   classit,
@@ -74,7 +76,7 @@ from .utils import (
   rle_array,
 )
 
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 __all__ = [
   "Keys",
@@ -90,6 +92,7 @@ __all__ = [
   "f1_score",
   "from_int_or_key",
   "from_state",
+  "identity_scaler",
   "init_progress",
   "iou",
   "min_max_scaler",
@@ -105,6 +108,7 @@ __all__ = [
   "rle_array",
   "roc_auc_score",
   "roc_curve",
+  "scaler_fn",
   "sigmoid_focal_loss",
   "softmax_focal_loss",
   "standard_scaler",
