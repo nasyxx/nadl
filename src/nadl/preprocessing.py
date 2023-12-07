@@ -102,7 +102,7 @@ def normalizer(
 def select_scaler(
   method: Literal["id", "minmax", "std", "l2_norm", "l1_norm", "max_norm"] = "minmax",
   axis: int = 0,
-) -> Callable[[jax.Array, int], SCALER]:
+) -> Callable[[jax.Array], SCALER]:
   """Get scaler function."""
   match method:
     case "id":
