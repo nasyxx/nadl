@@ -75,13 +75,30 @@ from .utils import (
   rle,
   rle_array,
 )
+from .blocks import (
+  BasicBlock,
+  BottleneckBlock,
+  ConvBlock,
+  DownSample,
+  ResNetBasic,
+  ResNetBottleneck,
+  UpSample,
+  make_layer,
+)
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
+  "BasicBlock",
+  "BottleneckBlock",
+  "ConvBlock",
+  "DownSample",
   "Keys",
   "PG",
+  "ResNetBasic",
+  "ResNetBottleneck",
   "SCALER",
+  "UpSample",
   "accuracy",
   "auc",
   "average_precision_score",
@@ -95,6 +112,7 @@ __all__ = [
   "identity_scaler",
   "init_progress",
   "iou",
+  "make_layer",
   "min_max_scaler",
   "new_key",
   "next_key",

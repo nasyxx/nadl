@@ -43,6 +43,7 @@ version = { source = "file", path = "src/nadl/__init__.py" }
 dev = [
     "scipy>=1.11.4",
     "scikit-learn>=1.3.2",
+    "ipdb>=0.13.13",
 ]
 [tool.mypy]
 exclude = [
