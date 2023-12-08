@@ -44,8 +44,8 @@ class UNet(linen.Module):
   """UNet model for image segmentation."""
 
   out_channels: int
-  init_features: int
-  num_features: int
+  num_features: int = 4
+  init_features: int = 64
   kernel_size: int = 3
   use_depthwise: bool = False
 
@@ -70,7 +70,10 @@ class UNet(linen.Module):
       features=list_features[-1] * 2,
       kernel_size=self.kernel_size,
       use_depthwise=self.use_depthwise,
-    )(linen.max_pool(x, window_shape=(2, 2), strides=(2, 2), padding="SAME"))
+    )(
+      linen.max_pool(x, window_shape=(2, 2), strides=(2, 2), padding="VALID"),
+      train=train,
+    )
 
     # Upsample path
     for features in reversed(list_features):
@@ -79,7 +82,7 @@ class UNet(linen.Module):
         features=features,
         kernel_size=self.kernel_size,
         use_depthwise=self.use_depthwise,
-      )(x, skip)
+      )(x, skip, train=train)
 
     # Final layer
     return linen.Conv(features=self.out_channels, kernel_size=(1, 1))(x)

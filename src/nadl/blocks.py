@@ -34,12 +34,14 @@ license  : GPL-3.0+
 
 Layer Blocks
 """
+from collections.abc import Sequence
+from functools import partial
+
 import jax
 import jax.numpy as jnp
 from flax import linen
 
 from typing import Literal
-from collections.abc import Sequence
 
 
 class ConvBlock(linen.Module):
@@ -47,14 +49,11 @@ class ConvBlock(linen.Module):
 
   features: int
   kernel_size: int = 3
-  use_residual: bool = True
   use_depthwise: bool = True
 
   @linen.compact
   def __call__(self, x: jax.Array, train: bool = False) -> jax.Array:
     """Apply the convolution block to the input."""
-    identity = x
-
     ks = (self.kernel_size, self.kernel_size)
     if self.use_depthwise:
       x = linen.Conv(
@@ -68,12 +67,7 @@ class ConvBlock(linen.Module):
       x = linen.Conv(self.features, ks, padding="SAME")(x)
 
     x = linen.BatchNorm()(x, use_running_average=not train)
-    x = linen.PReLU()(x)
-
-    if self.use_residual:
-      x += identity
-
-    return x
+    return linen.PReLU()(x)
 
 
 class DownSample(linen.Module):
@@ -95,9 +89,9 @@ class DownSample(linen.Module):
         pool_fn = linen.avg_pool
       case _:
         raise ValueError(f"Unknown pool type: {self.pool_type}")
-
+    pool_fn = partial(pool_fn, window_shape=(2, 2), strides=(2, 2), padding="VALID")
     if self.pool == "before":
-      x = pool_fn(x, window_shape=(2, 2), strides=(2, 2), padding="SAME")
+      x = pool_fn(x)
 
     x = ConvBlock(
       features=self.features,
@@ -106,7 +100,7 @@ class DownSample(linen.Module):
     )(x, train=train)
 
     if self.pool == "after":
-      x = pool_fn(x, window_shape=(2, 2), strides=(2, 2), padding="SAME")
+      x = pool_fn(x)
     return x
 
 
@@ -125,6 +119,19 @@ class UpSample(linen.Module):
       kernel_size=(2, 2),
       strides=(2, 2),
     )(x)
+
+    if x.shape != skip.shape:
+      diff = skip.shape[1] - x.shape[1]
+      x = jnp.pad(
+        x,
+        [
+          (0, 0),
+          (diff // 2, diff - diff // 2),
+          (diff // 2, diff - diff // 2),
+          (0, 0),
+        ],
+      )
+
     x = jnp.concatenate([x, skip], axis=-1)
     return ConvBlock(
       features=self.features,
