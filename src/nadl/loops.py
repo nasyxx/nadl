@@ -35,6 +35,7 @@ license  : GPL-3.0+
 Train Eval Loops
 """
 from typing import NamedTuple
+from collections.abc import Hashable
 
 from rich.console import Console
 from rich.progress import (
@@ -49,11 +50,13 @@ from rich.progress import (
 from rich.theme import Theme
 
 
-DEF_LIGHT_THEME = Theme({
-  "bar.back": "#50616D",
-  "bar.complete": "#EEDEB0",
-  "bar.finished": "#CCA4E3",
-})
+DEF_LIGHT_THEME = Theme(
+  {
+    "bar.back": "#50616D",
+    "bar.complete": "#789262",
+    "bar.finished": "#057748",
+  }
+)
 
 
 class PG(NamedTuple):
@@ -61,12 +64,12 @@ class PG(NamedTuple):
 
   pg: Progress
   console: Console
-  tasks: dict[str, TaskID]
+  tasks: dict[Hashable, TaskID]
 
 
 def init_progress(
-  pg: Progress | None,
-  console: Console | None,
+  pg: Progress | None = None,
+  console: Console | None = None,
   total: bool = True,
   bar_width: int | None = 20,
   extra_columns: tuple[ProgressColumn, ...] = (),
@@ -95,3 +98,19 @@ def add_columns(pg: PG, columns: tuple[ProgressColumn, ...]) -> PG:
   """Add columns."""
   pg.pg.columns = pg.pg.columns + columns
   return pg
+
+
+def test() -> None:
+  """Test progress."""
+  import time
+  pg = init_progress()
+  with pg.pg:
+    t0 = pg.tasks[0] = pg.pg.add_task("Task 0", total=100)
+    for i in range(100):
+      pg.pg.advance(t0)
+      time.sleep(0.5)
+
+
+
+if __name__ == "__main__":
+  test()
