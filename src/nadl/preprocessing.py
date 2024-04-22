@@ -34,20 +34,22 @@ license  : GPL-3.0+
 
 Preprocessing
 """
+
 from collections.abc import Callable
 from functools import partial
 
 import jax
 import jax.numpy as jnp
 
-from typing import Literal, TypeAlias
+from typing import Literal
 
-SCALER: TypeAlias = Callable[[jax.Array], jax.Array]
+type SCALER = Callable[[jax.Array], jax.Array]
 
 
 def identity_scaler(arr: jax.Array, axis: int = 0) -> SCALER:
   """Get identity scaler."""
   del arr, axis
+
   def scaler(x: jax.Array) -> jax.Array:
     """Scaler."""
     return x

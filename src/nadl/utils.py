@@ -34,6 +34,7 @@ license  : GPL-3.0+
 
 Utils
 """
+
 from typing import Literal
 import jax
 import jax.numpy as jnp
@@ -54,17 +55,17 @@ def rle(x: jax.Array, shift: int = 1) -> str:
 
 def classit(
   x: jax.Array,
-  method: Literal[None, "sigmoid", "softmax"] = "sigmoid",
-  keepdims: bool = True,
+  method: Literal[None, "sigmoid", "softmax", "threshold"] = "sigmoid",
+  threshold: float = 0.5,
 ) -> jax.Array:
   """Classify the array."""
   match method:
     case "sigmoid":
-      return jnp.where(jax.nn.sigmoid(x) > 0.5, 1, 0)  # noqa: PLR2004
+      return jax.nn.sigmoid(x) > threshold
     case "softmax":
       x = jax.nn.softmax(x)
-      return jnp.argmax(x, axis=-1, keepdims=keepdims)
-    case None:
-      return x
+      return jnp.argmax(x, axis=-1, keepdims=True)
+    case "threshold":
+      return x > threshold
     case _:
       raise ValueError(f"Unknown method {method}")

@@ -34,6 +34,7 @@ license  : GPL-3.0+
 
 Layer Blocks
 """
+
 from collections.abc import Sequence
 from functools import partial
 

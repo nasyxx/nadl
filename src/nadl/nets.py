@@ -34,6 +34,7 @@ license  : GPL-3.0+
 
 Pre define networks.
 """
+
 from .blocks import DownSample, UpSample, ConvBlock, ResNetBasic, ResNetBottleneck
 
 from flax import linen
