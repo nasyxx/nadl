@@ -1,0 +1,61 @@
+cache-dir = "~/.cache/ruff"
+exclude = [ "./typings" ]
+indent-width = 2
+line-length = 88
+output-format = "grouped"
+preview = true
+show-fixes = true
+unsafe-fixes = true
+
+[format]
+docstring-code-format = true
+preview = true
+
+
+[lint]
+ignore = [
+  "ANN101", "C417", "COM812", "CPY001", "D203", "D213", "D401",
+  "E111", "E114", "E401", "EM101", "EM102", "ERA001", "EXE001",
+  "FA102", "FBT002", "FBT001",
+  "I001", "PD", "PYI042",
+  "S101", "SLF001", "TRY003", "UP009",
+  "T201", "PGH003", "ISC001"
+]
+preview = true
+select = ["ALL"]
+
+unfixable = [
+  "F401",  # unused imports
+  "F841",  # unused variables
+  "C417"   # map
+]
+typing-modules = ["beartype.typing"]
+
+[lint.isort]
+section-order = [
+  "future", "standard-library", "first-party",
+  "tf", "torch", "jax", "types", "math", "database",
+  "third-party", "config", "local-folder"
+]
+
+[lint.isort.sections]
+database = ["lucene", "lupyne", "elasticsearch", "sqlite", "shelve"]
+tf = ["tensorflow", "keras"]
+torch = ["torch", "torchdata", "torchvision", "pytorch_lightning"]
+jax = ["jax", "haiku", "flax", "optax", "jraph", "chex", "jaxopt", "equinox", "orbax"]
+types = ["typing", "types", "jax.typing", "jaxtyping", "numpy.typing", "typing_extensions"]
+math = ["numpy", "scipy", "sklearn", "pandas"]
+config = ["config", "settings", "cfg", "smile_config", "tyro"]
+
+[lint.per-file-ignores]
+"__init__.py" = [ "D104" ]
+"__version__.py" = [ "D100" ]
+"sites/*.py" = [ "INP001" ]
+"src/nadl/images.py" = [ "F722" ]
+
+[lint.pylint]
+max-args = 10
+
+[lint.mccabe]
+# Flag errors (`C901`) whenever the complexity level exceeds 15.
+max-complexity = 15
