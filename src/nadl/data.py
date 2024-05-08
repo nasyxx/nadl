@@ -95,6 +95,8 @@ class IdxDataloader(eqx.Module):
     pad = self.batch_size - len(idxes) % self.batch_size
     if 0 < pad < self.batch_size:
       idxes = jnp.r_[idxes, jnp.zeros(pad, idxes.dtype)]
+    if pad == self.batch_size:
+      pad = 0
     idxes = idxes.reshape(-1, self.batch_size)
 
     for i, idx in enumerate(idxes):
@@ -109,7 +111,7 @@ class IdxDataloader(eqx.Module):
 
 def __test() -> None:
   """Test."""
-  dl = IdxDataloader(10, 3, shuffle=True, drop_last=True, auto_pad=True)
+  dl = IdxDataloader(10, 3, shuffle=True, drop_last=False, auto_pad=True)
   for i, state in enumerate(dl(42)):
     print(i, state.idx, state.pad)
 
