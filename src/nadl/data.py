@@ -35,7 +35,7 @@ license  : GPL-3.0+
 Simple dataset and dataloader.
 """
 
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 import equinox as eqx
 import jax
 import jax.numpy as jnp
@@ -43,14 +43,14 @@ from .keys import Keys
 from typing import NamedTuple
 
 
-class DState(NamedTuple):
+class DState[T](NamedTuple):
   """Dataloader state."""
 
-  idx: jax.Array
+  xs: T
   pad: int | None = None
 
 
-class IdxDataloader(eqx.Module):
+class IdxDataloader[T](eqx.Module):
   """Simple index dataloader.
 
   Provide indexes only for datasets.
@@ -62,6 +62,7 @@ class IdxDataloader(eqx.Module):
   shuffle: bool = False
   drop_last: bool = False
   auto_pad: bool = True
+  transform: Callable[[jax.Array], T] | None = None
 
   def __init__(
     self,
@@ -71,6 +72,7 @@ class IdxDataloader(eqx.Module):
     drop_last: bool = False,
     auto_pad: bool = False,
     key: jax.Array | None = None,
+    transform: Callable[[jax.Array], T] | None = None,
   ) -> None:
     """Initiate the dataloader."""
     self.length = length
@@ -79,41 +81,48 @@ class IdxDataloader(eqx.Module):
     self.drop_last = drop_last
     self.auto_pad = auto_pad
     self.key = Keys.from_int_or_key(key or 42)
+    self.transform = transform
 
-  def __call__(self, ki: int) -> Iterator[DState]:
+  def __call__(self, ki: int) -> Iterator[DState[T]]:
     """Get the indexes."""
     idxes = (
       jax.random.permutation(self.key(ki)[1], self.length)
       if self.shuffle
       else jnp.arange(self.length)
     )
-    if self.drop_last:
-      length = self.length - self.length % self.batch_size
-      idxes = idxes[:length]
-      pad = 0
+    length = (
+      self.length if not self.drop_last else self.length - self.length % self.batch_size
+    )
 
-    pad = self.batch_size - len(idxes) % self.batch_size
-    if 0 < pad < self.batch_size:
-      idxes = jnp.r_[idxes, jnp.zeros(pad, idxes.dtype)]
-    if pad == self.batch_size:
-      pad = 0
-    idxes = idxes.reshape(-1, self.batch_size)
+    pad = (
+      (self.batch_size - r) % self.batch_size if (r := length % self.batch_size) else 0
+    )
+    pad = pad if pad != self.batch_size else 0
 
-    for i, idx in enumerate(idxes):
-      if pad and i >= idxes.shape[0] - 1:
-        if self.auto_pad:
-          yield DState(idx, pad)
-        else:
-          yield DState(idx[:-pad], 0)
-      else:
-        yield DState(idx, 0)
+    if pad:
+      idxes = jnp.r_[idxes, jnp.full(pad, -1, idxes.dtype)]  # padding placeholder
+
+    idxes = idxes[:length + pad].reshape(-1, self.batch_size)
+
+    for i in idxes:
+      ii = i
+      if pad and not self.auto_pad and (ii == -1).any():
+        ii = ii[ii != -1]
+      xs = self.transform(ii) if self.transform else ii
+      yield DState(xs, pad if ((ii == -1).any() and self.auto_pad) else None)
 
 
 def __test() -> None:
   """Test."""
   dl = IdxDataloader(10, 3, shuffle=True, drop_last=False, auto_pad=True)
   for i, state in enumerate(dl(42)):
-    print(i, state.idx, state.pad)
+    print(i, state.xs, state.pad)
+  dl = IdxDataloader(10, 3, shuffle=True, drop_last=False, auto_pad=False)
+  for i, state in enumerate(dl(42)):
+    print(i, state.xs, state.pad)
+  dl = IdxDataloader(10, 3, shuffle=False, drop_last=True, auto_pad=False)
+  for i, state in enumerate(dl(42)):
+    print(i, state.xs, state.pad)
 
 
 if __name__ == "__main__":
