@@ -35,8 +35,9 @@ license  : GPL-3.0+
 Train Eval Loops
 """
 
-from collections.abc import Hashable
+from collections.abc import Hashable, Mapping
 
+import jax
 from equinox import Module
 
 from types import TracebackType
@@ -56,8 +57,8 @@ from rich.theme import Theme
 
 DEF_LIGHT_THEME = Theme({
   "bar.back": "#50616D",
-  "bar.complete": "#789262",
-  "bar.finished": "#057748",
+  "bar.complete": "#D3CBAF",
+  "bar.finished": "#b49b7f",
 })
 
 
@@ -90,6 +91,7 @@ class PG(Module):
         TimeRemainingColumn(),
         TimeElapsedColumn(),
         BarColumn(bar_width),
+        TextColumn("{task.fields[res]}"),
         console=console,
         disable=not show_progress,
       )
@@ -138,6 +140,21 @@ class PG(Module):
   ) -> None:
     """Exit."""
     self.pg.__exit__(exc_type, exc_val, exc_tb)
+
+  @staticmethod
+  def pformat(xs: Mapping[str, float | int | str | None]) -> str:
+    """Pretty format progress results."""
+    with (console := Console()).capture() as capture:
+      nxs = jax.tree.map(lambda x: float(f"{x:.4f}") if isinstance(x, float) else x, xs)
+      console.print(nxs, soft_wrap=True, justify="left", no_wrap=True, width=40)
+    return capture.get()
+
+  def update_res(
+    self, name: str, updates: Mapping[str, float | int | str | None]
+  ) -> None:
+    """Update res."""
+    if name in self.tasks:
+      self.pg.update(self.tasks[name], res=self.pformat(updates))
 
 
 def test() -> None:

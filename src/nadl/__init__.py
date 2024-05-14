@@ -35,7 +35,7 @@ license  : GPL-3.0+
 NADL
 """
 
-from .data import DState, IdxDataloader
+from .data import DState, IdxDataloader, es_loop
 from .keys import Keys, new_key
 from .loops import PG
 from .metrics import dice_coef, iou_coef
@@ -63,6 +63,7 @@ __all__ = [
   "Keys",
   "classit",
   "dice_coef",
+  "es_loop",
   "identity_scaler",
   "iou_coef",
   "min_max_scaler",
