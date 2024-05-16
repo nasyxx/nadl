@@ -40,24 +40,26 @@ from .keys import Keys, new_key
 from .loops import PG
 from .metrics import dice_coef, iou_coef
 from .preprocessing import (
-  SCALER,
-  identity_scaler,
-  min_max_scaler,
-  normalizer,
-  select_scaler,
-  standard_scaler,
+    SCALER,
+    identity_scaler,
+    min_max_scaler,
+    normalizer,
+    select_scaler,
+    standard_scaler,
 )
+from .states import BaseTrainState, state_fn
 from .utils import (
-  classit,
-  rle,
-  rle_array,
+    classit,
+    rle,
+    rle_array,
 )
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 
 __all__ = [
   "PG",
   "SCALER",
+  "BaseTrainState",
   "DState",
   "IdxDataloader",
   "Keys",
@@ -73,4 +75,5 @@ __all__ = [
   "rle_array",
   "select_scaler",
   "standard_scaler",
+  "state_fn",
 ]
