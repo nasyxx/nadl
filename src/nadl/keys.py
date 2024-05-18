@@ -35,72 +35,95 @@ license  : GPL-3.0+
 Keys.
 """
 
-from collections import deque
-from collections.abc import Sequence
+from __future__ import annotations
 
 import jax
-from equinox import Module, field
+import jax.numpy as jnp
+from equinox import Module, field, tree_at
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+  from collections.abc import Sequence
 
 
 class Keys(Module):
-  """JAX random key sequence."""
+  """JAX random key sequence.
 
-  key: jax.Array
-  subkeys: deque[jax.Array]
+  init_key:  The initial key.
+  keys: The key sequence in cluding the histories.
+  idx: Current key idx in the key sequence.
+  """
+
   init_key: jax.Array
-  step: jax.Array = field(default_factory=lambda: jax.numpy.array(0))
+  keys: list[jax.Array]
+  idx: jax.Array = field(default_factory=lambda: jax.numpy.array(0))
+
+  @property
+  def key(self) -> jax.Array:
+    """Get key."""
+    if self.keys:
+      return self.keys[-1]
+    self.reverse(1)
+    return self.keys[-1]
 
   @property
   def state(self) -> tuple[jax.Array, Sequence[jax.Array], jax.Array]:
     """Get state."""
-    return self.key, self.subkeys, self.step
+    return self.init_key, self.keys, self.idx
 
   @classmethod
-  def from_int_or_key(cls: type["Keys"], key: jax.Array | int) -> "Keys":
+  def from_int_or_key(cls: type[Keys], key: jax.Array | int) -> Keys:
     """Convert int or key to Keys."""
     if isinstance(key, int):
-      return cls(key := jax.random.key(key), deque(), key)
-    return cls(key, deque(), key)
+      return cls(jax.random.key(key), [])
+    return cls(key, [])
 
   @classmethod
   def from_state(
-    cls: type["Keys"], key: jax.Array, subkeys: Sequence[jax.Array], step: jax.Array
-  ) -> "Keys":
+    cls: type[Keys], key: jax.Array, keys: Sequence[jax.Array], idx: jax.Array
+  ) -> Keys:
     """Convert state to Keys."""
-    return cls(key, deque(subkeys), step)
+    return cls(key, list(keys), idx)
 
-  def reverse(self, num: int) -> "Keys":
+  def reverse(self, num: int | jax.Array) -> Keys:
     """Reverse the keys."""
     while (num := num - 1) >= 0:
-      if self.subkeys:
-        self.subkeys.append(jax.random.fold_in(self.subkeys[-1], 0))
+      if self.keys:
+        self.keys.append(jax.random.fold_in(self.keys[-1], 0))
       else:
-        self.subkeys.append(jax.random.fold_in(self.key, 0))
+        self.keys.append(jax.random.fold_in(self.init_key, 0))
     return self
 
-  def next_key(self) -> tuple["Keys", jax.Array]:
+  def next_key(self) -> Keys:
     """Get next key."""
-    if not self.subkeys:
-      self.reverse(1)
-    key = self.subkeys.popleft()
-    return self.from_state(key, self.subkeys, self.step + 1), key
+    return tree_at(lambda k: k.idx, self, self.idx + 1)
 
-  def take(self, num: int) -> tuple["Keys", tuple[jax.Array, ...]]:
-    """Take num keys."""
-    self.reverse(max(num - len(self.subkeys), 0))
-    keys = tuple(self.subkeys.popleft() for _ in range(num))
-    return self.from_state(keys[-1], self.subkeys, self.step + num), keys
+  def __iter__(self) -> Keys:
+    """Iterate the keys."""
+    return self
 
-  def __call__(self, epoch: int | None = None) -> tuple["Keys", jax.Array]:
-    """Get keys for epoch."""
-    if epoch:
-      if epoch > self.step:
-        keys, ks = self.take((epoch - self.step).item())
-        return keys, ks[-1]
-      key = Keys.from_int_or_key(self.init_key)
-      keys, ks = key.take(epoch)
-      return keys, ks[-1]
+  def __next__(self) -> Keys:
+    """Get next key."""
     return self.next_key()
+
+  def take(self, num: int) -> jax.Array:
+    """Take num keys."""
+    self.reverse(jnp.max(num - len(self.keys), 0))
+    return jnp.r_[*self.keys[-num:]]
+
+  def __call__(self, epoch: int | jax.Array | None = None) -> jax.Array:
+    """Get keys for epoch."""
+    match epoch:
+      case int():
+        if epoch + 1 > len(self.keys):
+          self.reverse(epoch + 1 - len(self.keys))
+        return self.keys[epoch]
+      case jax.Array():
+        self.reverse(jnp.maximum((epoch + 1 - len(self.keys)).max(), 0))
+        return jnp.r_[*self.keys][epoch]
+      case None:
+        return self(self.idx)
 
 
 new_key = Keys.from_int_or_key
