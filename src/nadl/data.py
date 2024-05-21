@@ -40,93 +40,72 @@ from collections.abc import Callable, Iterator
 import equinox as eqx
 import jax
 import jax.numpy as jnp
-from equinox import tree_at
+from equinox import field, tree_at
+
+from typing import NamedTuple
 
 from .keys import Keys
-from .loops import PG
+from .loops import PG, RESC, PGThread
 
 
-class DState[T](eqx.Module):
+class DState[T](NamedTuple):
   """Dataloader state."""
 
   xs: T
-  pad: int | None = None
-  epoch: int | None = None
-  step: int | None = None
+  pad: jax.Array
+  shape: tuple[int, ...]
+  epoch: jax.Array = field(default_factory=lambda: jnp.array(0))
+  step: jax.Array = field(default_factory=lambda: jnp.array(0))
   name: str | None = None
 
 
 class IdxDataloader[T](eqx.Module):
-  """Simple index dataloader.
-
-  Provide indexes only dataloader for dataset.
-  """
+  """Simple index dataloader."""
 
   length: int
-  key: Keys
-  batch_size: int = 1
-  shuffle: bool = False
-  drop_last: bool = False
-  auto_pad: bool = True
-  transform: Callable[[jax.Array], T] | None = None
+  pad: int
+  batch_size: int
+  drop_num: int = 0
+  transform: Callable[[jax.Array], T] = eqx.field(static=True, init=False)
 
   def __init__(
     self,
     length: int,
-    batch_size: int = 1,
-    shuffle: bool = False,
+    batch_size: int,
     drop_last: bool = False,
-    auto_pad: bool = False,
-    key: jax.Array | None = None,
-    transform: Callable[[jax.Array], T] | None = None,
+    transform: Callable[[jax.Array], T] = lambda x: x,
   ) -> None:
     """Initiate the dataloader."""
     self.length = length
+
+    if drop_last:
+      self.drop_num = self.length % batch_size
+
+    length = length if not drop_last else length - length % batch_size
+    pad = (batch_size - r) % batch_size if (r := length % batch_size) else 0
+    self.pad = pad = pad if pad != batch_size else 0
+
     self.batch_size = batch_size
-    self.shuffle = shuffle
-    self.drop_last = drop_last
-    self.auto_pad = auto_pad
-    self.key = Keys.from_int_or_key(key or 42)
     self.transform = transform
 
-  def __call__(self, ki: int) -> Iterator[DState[T]]:
+  @eqx.filter_jit
+  def __call__(self, key: jax.Array | None = None) -> DState[T]:
     """Get the indexes."""
-    idxes = (
-      jax.random.permutation(self.key(ki)[1], self.length)
-      if self.shuffle
-      else jnp.arange(self.length)
-    )
-    length = (
-      self.length if not self.drop_last else self.length - self.length % self.batch_size
-    )
+    if key is None:
+      idxes = jnp.arange(self.length)
+    else:
+      idxes = jax.random.permutation(key, self.length)
+    length = self.length if not self.drop_num else self.length - self.drop_num
 
-    pad = (
-      (self.batch_size - r) % self.batch_size if (r := length % self.batch_size) else 0
-    )
-    pad = pad if pad != self.batch_size else 0
-
-    # use -1 as padding placeholder
-    idxes = jnp.r_[idxes, jnp.full(pad, -1, idxes.dtype)]
-
-    idxes = idxes[: length + pad].reshape(-1, self.batch_size)
-
-    for i in idxes:
-      ii = i
-      if pad and not self.auto_pad and (ii == -1).any():
-        ii = ii[ii != -1]
-      xs = self.transform(ii) if self.transform else ii
-      yield DState(xs, pad if ((ii == -1).any() and self.auto_pad) else None)
-
-  def __len__(self) -> int:
-    """Length."""
-    if self.drop_last:
-      return self.length // self.batch_size
-    return (self.length + self.batch_size - 1) // self.batch_size
+    idxes = jnp.r_[idxes, jnp.full(self.pad, -1, idxes.dtype)]
+    idxes = idxes[: length + self.pad].reshape(-1, self.batch_size)
+    return DState(self.transform(idxes), jnp.where(idxes == -1, 1, 0), idxes.shape)
 
 
 def es_loop[T](
   loader: IdxDataloader[T],
   pg: PG,
+  keys: Keys | None = None,
   epochs: int = 2,
   start_epoch: int = 1,
   prefix: str = "L",
@@ -135,6 +114,7 @@ def es_loop[T](
 ) -> Iterator[DState[T]]:
   """Simple epoch loop."""
   es, ss = f"{prefix}-{es}", f"{prefix}-{ss}"
+  assert epochs > 0, "Epochs should be greater than 0."
   if epochs > 1:
     if es in pg.tasks:
       pg.pg.reset(pg.tasks[es])
@@ -142,46 +122,55 @@ def es_loop[T](
       pg.add_task(es, total=epochs, res="")
     pg.advance(pg.tasks[es], start_epoch - 1)
 
+  vdl = eqx.filter_jit(eqx.filter_vmap(loader, axis_size=1))
+  if keys:
+    keys.reverse(epochs)
+  ds: DState[T] = vdl() if keys is None else vdl(keys(jnp.arange(epochs)))
+  ds = tree_at(lambda d: d.name, ds, prefix, is_leaf=lambda x: x is None)
+
   if ss in pg.tasks:
     pg.pg.reset(pg.tasks[ss])
   else:
-    pg.add_task(ss, total=len(loader) * epochs, res="")
-  pg.advance(pg.tasks[ss], (start_step := max((start_epoch - 1), 0) * len(loader)))
+    pg.add_task(ss, total=ds.shape[0] * epochs, res="")
+  pg.advance(pg.tasks[ss], (start_step := max((start_epoch - 1), 0) * ds.shape[0]))
 
-  for i in range(start_epoch, epochs + 1):
-    for ii, ds in enumerate(loader(i), start_step):
-      yield tree_at(
-        lambda x: (x.epoch, x.step, x.name),
-        ds,
-        (i, (i - 1) * len(loader) + ii + 1, prefix),
-        is_leaf=lambda x: x is None,
-      )
-      pg.advance(pg.tasks[ss])
-    if epochs > 1:
-      pg.advance(pg.tasks[es])
+  @eqx.filter_jit
+  def _select(ds: DState[T], i: jax.Array, ii: jax.Array) -> DState[T]:
+    return tree_at(
+      lambda x: (x.epoch, x.step),
+      jax.tree.map(lambda x: x[i, ii] if isinstance(x, jax.Array) else x, ds),
+      (i, i * ds.shape[0] + ii),
+    )
+
+  with PGThread(pg.pg, pg.tasks[ss]) as pts, PGThread(pg.pg, pg.tasks[es]) as pte:
+    for i in jnp.arange(start_epoch, epochs + 1):
+      # nds = loader(keys and keys(i) or None)
+      for ii in jnp.arange(start_step, ds.shape[0]):
+        yield _select(ds, i, ii)
+        pts.completed += 1
+      if epochs > 1:
+        pte.completed += 1
 
 
 def __test() -> None:
   """Test."""
-  pg = PG.init_progress()
+  pg = PG.init_progress(extra_columns=(RESC,))
+  keys = Keys.from_int_or_key(42)
   with pg:
     pg.console.print("Drop Last: False, Auto Pad: True")
-    dl = IdxDataloader(10, 3, shuffle=True, drop_last=False, auto_pad=True)
-    for i in es_loop(dl, pg, prefix="DFAT"):
-      pg.update_res("DFAT-S", {"epoch": i.epoch, "step": i.step, "name": i.name})
-      pg.console.print(i, i.xs)
-    pg.console.print("Drop Last: False, Auto Pad: False")
-    dl = IdxDataloader(10, 3, shuffle=True, drop_last=False, auto_pad=False)
-    for i in es_loop(dl, pg, prefix="DFAF"):
-      pg.console.print(i, i.xs)
-    pg.console.print("Drop Last: True, Auto Pad: False")
-    dl = IdxDataloader(10, 3, shuffle=False, drop_last=True, auto_pad=False)
-    for i in es_loop(dl, pg, prefix="DTAF"):
-      pg.console.print(i, i.xs)
+    dl = IdxDataloader(10, 3, drop_last=False)
+
+    for i in es_loop(dl, pg, epochs=2, prefix="DFAT"):
+      pg.update_res(
+        "DFAT-S", {"epoch": i.epoch.item(), "step": i.step.item(), "name": i.name}
+      )
+      pg.console.print(i)
+      continue
+    pg.console.print(i)
     pg.console.print("Drop Last: True, Auto Pad: True")
-    dl = IdxDataloader(10, 3, shuffle=False, drop_last=True, auto_pad=True)
-    for i in es_loop(dl, pg, prefix="DTAT"):
-      pg.console.print(i, i.xs)
+    dl = IdxDataloader(10, 3, drop_last=True)
+    for i in es_loop(dl, pg, keys, prefix="DTAT"):
+      pg.console.print(i)
 
 
 if __name__ == "__main__":

@@ -24,7 +24,7 @@ license = {text = "GPLv3"}
 
 [project.optional-dependencies]
 doc = [
-    "mkdocs-material>=9.5.22",
+    "mkdocs-material>=9.5.24",
     "mkdocs>=1.6.0",
     "mike>=2.1.1",
     "mkdocstrings[python]>=0.25.1",

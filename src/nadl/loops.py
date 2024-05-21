@@ -35,12 +35,13 @@ license  : GPL-3.0+
 Train Eval Loops
 """
 
-from collections.abc import Hashable, Mapping
+from __future__ import annotations
+
+from threading import Event, Thread
 
 from equinox import Module
 
-from types import TracebackType
-from typing import Any, Self
+from typing import TYPE_CHECKING, Any, Self
 
 from rich.console import Console
 from rich.progress import (
@@ -56,11 +57,62 @@ from rich.theme import Theme
 
 from .utils import pformat
 
+if TYPE_CHECKING:
+  from collections.abc import Hashable, Mapping
+
+  from types import TracebackType
+
 DEF_LIGHT_THEME = Theme({
   "bar.back": "#50616D",
   "bar.complete": "#D3CBAF",
   "bar.finished": "#b49b7f",
 })
+
+
+RESC = TextColumn("{task.fields[res]}")
+
+
+class PGThread(Thread):
+  """Progress thread."""
+
+  def __init__(self, pg: Progress, task_id: TaskID) -> None:
+    """Init."""
+    super().__init__()
+    self.pg = pg
+    self.tid = task_id
+    self.done = Event()
+    self.completed = 0
+    self.res: str | None = None
+    super().__init__()
+
+  def run(self) -> None:
+    """Run."""
+    last_completed = 0
+    wait = self.done.wait
+    while not wait(0.2):
+      if (completed := self.completed) != last_completed:
+        self.pg.advance(self.tid, completed - last_completed)
+        last_completed = completed
+        if self.res is not None:
+          self.pg.update(self.tid, res=self.res)
+          self.res = None
+    self.pg.update(self.tid, completed=self.completed, refresh=True)
+
+  def __enter__(self) -> Self:
+    """Enter."""
+    self.start()
+    return self
+
+  def __exit__(
+    self,
+    exc_type: type[BaseException] | None,
+    exc_val: BaseException | None,
+    exc_tb: TracebackType | None,
+  ) -> None:
+    """Exit."""
+    del exc_type, exc_val, exc_tb
+    self.done.set()
+    self.join()
 
 
 class PG(Module):
@@ -92,7 +144,6 @@ class PG(Module):
         TimeRemainingColumn(),
         TimeElapsedColumn(),
         BarColumn(bar_width),
-        TextColumn("{task.fields[res]}"),
         console=console,
         disable=not show_progress,
       )
@@ -152,14 +203,11 @@ class PG(Module):
 
 def test() -> None:
   """Test progress."""
-  import time  # noqa: PLC0415
-
   pg = PG.init_progress()
-  with pg:
-    t0 = pg.add_task("Task 0", total=100)
-    for _i in range(100):
-      pg.advance(t0)
-      time.sleep(0.5)
+  t0 = pg.add_task("Task 0", total=10**8)
+  with pg, PGThread(pg.pg, t0) as pt:
+    for _i in range(10**8):
+      pt.completed += 1
 
 
 if __name__ == "__main__":
