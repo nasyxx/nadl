@@ -112,6 +112,10 @@ class Keys(Module):
     self.reserve(jnp.max(num - len(self.keys), 0))
     return jnp.r_[*self.keys[-num:]]
 
+  def __len__(self) -> int:
+    """Length of keys."""
+    return len(self.keys)
+
   def __call__(self, epoch: int | jax.Array | None = None) -> jax.Array:
     """Get keys for epoch."""
     match epoch:

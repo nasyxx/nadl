@@ -46,7 +46,7 @@ type = "find_links"
 [tool.pdm.dev-dependencies]
 dev = [
     "scipy>=1.13.0",
-    "scikit-learn>=1.4.2",
+    "scikit-learn>=1.5.0",
     "ipdb>=0.13.13",
 ]
 [tool.mypy]
