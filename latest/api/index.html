@@ -423,9 +423,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#nadl.Keys.reverse" class="md-nav__link">
+  <a href="#nadl.Keys.reserve" class="md-nav__link">
     <span class="md-ellipsis">
-      reverse
+      reserve
     </span>
   </a>
   
@@ -513,6 +513,57 @@
   <a href="#nadl.PG.update_res" class="md-nav__link">
     <span class="md-ellipsis">
       update_res
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.PGThread" class="md-nav__link">
+    <span class="md-ellipsis">
+      PGThread
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PGThread">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nadl.PGThread.__enter__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __enter__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nadl.PGThread.__exit__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __exit__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nadl.PGThread.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __init__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nadl.PGThread.run" class="md-nav__link">
+    <span class="md-ellipsis">
+      run
     </span>
   </a>
   
@@ -830,9 +881,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#nadl.Keys.reverse" class="md-nav__link">
+  <a href="#nadl.Keys.reserve" class="md-nav__link">
     <span class="md-ellipsis">
-      reverse
+      reserve
     </span>
   </a>
   
@@ -920,6 +971,57 @@
   <a href="#nadl.PG.update_res" class="md-nav__link">
     <span class="md-ellipsis">
       update_res
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.PGThread" class="md-nav__link">
+    <span class="md-ellipsis">
+      PGThread
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PGThread">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nadl.PGThread.__enter__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __enter__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nadl.PGThread.__exit__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __exit__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nadl.PGThread.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __init__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nadl.PGThread.run" class="md-nav__link">
+    <span class="md-ellipsis">
+      run
     </span>
   </a>
   
@@ -1432,7 +1534,7 @@ license  : GPL-3.0+</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">pad</span> <span class="o">=</span> <span class="n">pad</span> <span class="o">=</span> <span class="n">pad</span> <span class="k">if</span> <span class="n">pad</span> <span class="o">!=</span> <span class="n">batch_size</span> <span class="k">else</span> <span class="mi">0</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">filter_jit</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
 
   <span class="nd">@eqx</span><span class="o">.</span><span class="n">filter_jit</span>
   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DState</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
@@ -1556,7 +1658,7 @@ license  : GPL-3.0+</p>
   <span class="bp">self</span><span class="o">.</span><span class="n">pad</span> <span class="o">=</span> <span class="n">pad</span> <span class="o">=</span> <span class="n">pad</span> <span class="k">if</span> <span class="n">pad</span> <span class="o">!=</span> <span class="n">batch_size</span> <span class="k">else</span> <span class="mi">0</span>
 
   <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
-  <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">filter_jit</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1687,7 +1789,7 @@ idx: Current key idx in the key sequence.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get key.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
   <span class="nd">@property</span>
@@ -1709,7 +1811,7 @@ idx: Current key idx in the key sequence.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert state to Keys.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">keys</span><span class="p">),</span> <span class="n">idx</span><span class="p">)</span>
 
-  <span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Keys</span><span class="p">:</span>
+  <span class="k">def</span> <span class="nf">reserve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Keys</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reverse the keys.&quot;&quot;&quot;</span>
     <span class="k">while</span> <span class="p">(</span><span class="n">num</span> <span class="o">:=</span> <span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
@@ -1732,7 +1834,7 @@ idx: Current key idx in the key sequence.</p>
 
   <span class="k">def</span> <span class="nf">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Take num keys.&quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="o">-</span><span class="n">num</span><span class="p">:]]</span>
 
   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">:</span>
@@ -1740,10 +1842,10 @@ idx: Current key idx in the key sequence.</p>
     <span class="k">match</span> <span class="n">epoch</span><span class="p">:</span>
       <span class="k">case</span> <span class="nb">int</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">):</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">))</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="n">epoch</span><span class="p">]</span>
       <span class="k">case</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">():</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">((</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">((</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">][</span><span class="n">epoch</span><span class="p">]</span>
       <span class="k">case</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">)</span>
@@ -1835,10 +1937,10 @@ idx: Current key idx in the key sequence.</p>
   <span class="k">match</span> <span class="n">epoch</span><span class="p">:</span>
     <span class="k">case</span> <span class="nb">int</span><span class="p">():</span>
       <span class="k">if</span> <span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">))</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="n">epoch</span><span class="p">]</span>
     <span class="k">case</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">():</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">((</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">((</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
       <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">][</span><span class="n">epoch</span><span class="p">]</span>
     <span class="k">case</span> <span class="kc">None</span><span class="p">:</span>
       <span class="k">return</span> <span class="bp">self</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">)</span>
@@ -2001,8 +2103,8 @@ idx: Current key idx in the key sequence.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="nadl.Keys.reverse" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">reverse</span><span class="p">(</span><span class="n">num</span><span class="p">)</span></code>
+<h3 id="nadl.Keys.reserve" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">reserve</span><span class="p">(</span><span class="n">num</span><span class="p">)</span></code>
 
 </h3>
 
@@ -2020,7 +2122,7 @@ idx: Current key idx in the key sequence.</p>
 <span class="normal">93</span>
 <span class="normal">94</span>
 <span class="normal">95</span>
-<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Keys</span><span class="p">:</span>
+<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reserve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Keys</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Reverse the keys.&quot;&quot;&quot;</span>
   <span class="k">while</span> <span class="p">(</span><span class="n">num</span> <span class="o">:=</span> <span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
@@ -2054,7 +2156,7 @@ idx: Current key idx in the key sequence.</p>
 <span class="normal">112</span>
 <span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Take num keys.&quot;&quot;&quot;</span>
-  <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span>
   <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="o">-</span><span class="n">num</span><span class="p">:]]</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2566,6 +2668,280 @@ idx: Current key idx in the key sequence.</p>
 
 </div>
 
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="nadl.PGThread" class="doc doc-heading">
+            <code>PGThread</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="threading.Thread">Thread</span></code></p>
+
+
+      <p>Progress thread.</p>
+
+              <details class="quote">
+                <summary>Source code in <code>nadl/loops.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PGThread</span><span class="p">(</span><span class="n">Thread</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Progress thread.&quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pg</span><span class="p">:</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="n">TaskID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Init.&quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">pg</span> <span class="o">=</span> <span class="n">pg</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tid</span> <span class="o">=</span> <span class="n">task_id</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">completed</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run.&quot;&quot;&quot;</span>
+    <span class="n">last_completed</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="o">.</span><span class="n">wait</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">wait</span><span class="p">(</span><span class="mf">0.2</span><span class="p">):</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">completed</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">completed</span><span class="p">)</span> <span class="o">!=</span> <span class="n">last_completed</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pg</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tid</span><span class="p">,</span> <span class="n">completed</span> <span class="o">-</span> <span class="n">last_completed</span><span class="p">)</span>
+        <span class="n">last_completed</span> <span class="o">=</span> <span class="n">completed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">pg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tid</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">pg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tid</span><span class="p">,</span> <span class="n">completed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">completed</span><span class="p">,</span> <span class="n">refresh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enter.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span>
+
+  <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">exc_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">exc_val</span><span class="p">:</span> <span class="ne">BaseException</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">exc_tb</span><span class="p">:</span> <span class="n">TracebackType</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exit.&quot;&quot;&quot;</span>
+    <span class="k">del</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="nadl.PGThread.__enter__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__enter__</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Enter.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>nadl/loops.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Enter.&quot;&quot;&quot;</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+  <span class="k">return</span> <span class="bp">self</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="nadl.PGThread.__exit__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__exit__</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Exit.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>nadl/loops.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span>
+  <span class="bp">self</span><span class="p">,</span>
+  <span class="n">exc_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">exc_val</span><span class="p">:</span> <span class="ne">BaseException</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">exc_tb</span><span class="p">:</span> <span class="n">TracebackType</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Exit.&quot;&quot;&quot;</span>
+  <span class="k">del</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="nadl.PGThread.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">pg</span><span class="p">,</span> <span class="n">task_id</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Init.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>nadl/loops.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pg</span><span class="p">:</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="n">TaskID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Init.&quot;&quot;&quot;</span>
+  <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">pg</span> <span class="o">=</span> <span class="n">pg</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">tid</span> <span class="o">=</span> <span class="n">task_id</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">completed</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="nadl.PGThread.run" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">run</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Run.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>nadl/loops.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span>
+<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Run.&quot;&quot;&quot;</span>
+  <span class="n">last_completed</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">wait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="o">.</span><span class="n">wait</span>
+  <span class="k">while</span> <span class="ow">not</span> <span class="n">wait</span><span class="p">(</span><span class="mf">0.2</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">completed</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">completed</span><span class="p">)</span> <span class="o">!=</span> <span class="n">last_completed</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">pg</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tid</span><span class="p">,</span> <span class="n">completed</span> <span class="o">-</span> <span class="n">last_completed</span><span class="p">)</span>
+      <span class="n">last_completed</span> <span class="o">=</span> <span class="n">completed</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tid</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">pg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tid</span><span class="p">,</span> <span class="n">completed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">completed</span><span class="p">,</span> <span class="n">refresh</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
 
 <div class="doc doc-object doc-function">
 
@@ -2741,7 +3117,7 @@ idx: Current key idx in the key sequence.</p>
 
   <span class="n">vdl</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">filter_jit</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">filter_vmap</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">axis_size</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
   <span class="k">if</span> <span class="n">keys</span><span class="p">:</span>
-    <span class="n">keys</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">epochs</span><span class="p">)</span>
+    <span class="n">keys</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">epochs</span><span class="p">)</span>
   <span class="n">ds</span><span class="p">:</span> <span class="n">DState</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="n">vdl</span><span class="p">()</span> <span class="k">if</span> <span class="n">keys</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">vdl</span><span class="p">(</span><span class="n">keys</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">epochs</span><span class="p">)))</span>
   <span class="n">ds</span> <span class="o">=</span> <span class="n">tree_at</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
 
