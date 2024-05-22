@@ -54,7 +54,7 @@ from .utils import (
   rle_array,
 )
 
-__version__ = "1.4.1"
+__version__ = "1.4.2"
 
 __all__ = [
   "PG",
