@@ -86,7 +86,7 @@ class IdxDataloader[T](eqx.Module):
     self.pad = pad = pad if pad != batch_size else 0
 
     self.batch_size = batch_size
-    self.transform = transform
+    self.transform = eqx.filter_jit(transform)
 
   @eqx.filter_jit
   def __call__(self, key: jax.Array | None = None) -> DState[T]:
@@ -124,7 +124,7 @@ def es_loop[T](
 
   vdl = eqx.filter_jit(eqx.filter_vmap(loader, axis_size=1))
   if keys:
-    keys.reverse(epochs)
+    keys.reserve(epochs)
   ds: DState[T] = vdl() if keys is None else vdl(keys(jnp.arange(epochs)))
   ds = tree_at(lambda d: d.name, ds, prefix, is_leaf=lambda x: x is None)
 

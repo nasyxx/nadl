@@ -64,7 +64,7 @@ class Keys(Module):
     """Get key."""
     if self.keys:
       return self.keys[-1]
-    self.reverse(1)
+    self.reserve(1)
     return self.keys[-1]
 
   @property
@@ -86,7 +86,7 @@ class Keys(Module):
     """Convert state to Keys."""
     return cls(key, list(keys), idx)
 
-  def reverse(self, num: int | jax.Array) -> Keys:
+  def reserve(self, num: int | jax.Array) -> Keys:
     """Reverse the keys."""
     while (num := num - 1) >= 0:
       if self.keys:
@@ -109,7 +109,7 @@ class Keys(Module):
 
   def take(self, num: int) -> jax.Array:
     """Take num keys."""
-    self.reverse(jnp.max(num - len(self.keys), 0))
+    self.reserve(jnp.max(num - len(self.keys), 0))
     return jnp.r_[*self.keys[-num:]]
 
   def __call__(self, epoch: int | jax.Array | None = None) -> jax.Array:
@@ -117,10 +117,10 @@ class Keys(Module):
     match epoch:
       case int():
         if epoch + 1 > len(self.keys):
-          self.reverse(epoch + 1 - len(self.keys))
+          self.reserve(epoch + 1 - len(self.keys))
         return self.keys[epoch]
       case jax.Array():
-        self.reverse(jnp.maximum((epoch + 1 - len(self.keys)).max(), 0))
+        self.reserve(jnp.maximum((epoch + 1 - len(self.keys)).max(), 0))
         return jnp.r_[*self.keys][epoch]
       case None:
         return self(self.idx)
