@@ -165,11 +165,11 @@ def es_loop[T](
 
   with PGThread(pg.pg, pg.tasks[ss]) as pts, PGThread(pg.pg, pg.tasks[es]) as pte:
     for i in jnp.arange(start_epoch, epochs + 1):
-      for ii in jnp.arange(start_step, ds.shape[0]):
-        yield _select(i, ii)
-        pts.completed += 1
       if epochs > 1:
         pte.completed += 1
+      for ii in jnp.arange(start_step, ds.shape[0]):
+        pts.completed += 1
+        yield _select(i, ii)
 
 
 def __test() -> None:
