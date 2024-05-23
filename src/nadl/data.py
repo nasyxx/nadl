@@ -153,7 +153,7 @@ def es_loop[T](
     pg.pg.reset(pg.tasks[ss], total=ds.shape[0] * epochs, res="")
   else:
     pg.add_task(ss, total=ds.shape[0] * epochs, res="")
-  pg.advance(pg.tasks[ss], (start_step := max((start_epoch - 1), 0) * ds.shape[0]))
+  pg.advance(pg.tasks[ss], (start_step := max((start_epoch - 1), 0)))
 
   @eqx.filter_jit
   def _select(i: jax.Array, ii: jax.Array) -> DState[T]:
@@ -180,7 +180,7 @@ def __test() -> None:
     pg.console.print("Drop Last: False, Auto Pad: True")
     dl = IdxDataloader(314430, 256, drop_last=False)
 
-    for i in es_loop(dl, pg, epochs=300, keys=keys, prefix="DFAT"):
+    for i in es_loop(dl, pg, epochs=300, keys=keys, prefix="DFAT", start_epoch=10):
       pg.update_res(
         "DFAT-S", {"epoch": i.epoch.item(), "step": i.step.item(), "name": i.name}
       )
