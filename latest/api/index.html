@@ -3166,8 +3166,7 @@ idx: Current key idx in the key sequence.</p>
 <span class="normal">169</span>
 <span class="normal">170</span>
 <span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">es_loop</span><span class="p">[</span><span class="n">T</span><span class="p">](</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">es_loop</span><span class="p">[</span><span class="n">T</span><span class="p">](</span>
   <span class="n">loader</span><span class="p">:</span> <span class="n">IdxDataloader</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
   <span class="n">pg</span><span class="p">:</span> <span class="n">PG</span><span class="p">,</span>
   <span class="n">keys</span><span class="p">:</span> <span class="n">Keys</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -3184,7 +3183,6 @@ idx: Current key idx in the key sequence.</p>
     <span class="n">keys</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">epochs</span><span class="p">)</span>
 
   <span class="n">vdl</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">filter_jit</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">filter_vmap</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">axis_size</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-  <span class="n">pg</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Building dataloader caches...&quot;</span><span class="p">)</span>
   <span class="n">ds</span><span class="p">:</span> <span class="n">DState</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="n">vdl</span><span class="p">()</span> <span class="k">if</span> <span class="n">keys</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">vdl</span><span class="p">(</span><span class="n">keys</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">epochs</span><span class="p">)))</span>
   <span class="n">ds</span> <span class="o">=</span> <span class="n">tree_at</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
 
