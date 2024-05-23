@@ -140,7 +140,6 @@ def es_loop[T](
     keys.reserve(epochs)
 
   vdl = eqx.filter_jit(eqx.filter_vmap(loader, axis_size=1))
-  pg.console.log("Building dataloader caches...")
   ds: DState[T] = vdl() if keys is None else vdl(keys(jnp.arange(epochs)))
   ds = tree_at(lambda d: d.name, ds, prefix, is_leaf=lambda x: x is None)
 
