@@ -143,31 +143,30 @@ def es_loop[T](
   ds: DState[T] = vdl() if keys is None else vdl(keys(jnp.arange(epochs)))
   ds = tree_at(lambda d: d.name, ds, prefix, is_leaf=lambda x: x is None)
 
-  if epochs > 1:
-    if es in pg.tasks:
-      pg.pg.reset(pg.tasks[es], total=epochs)
-    else:
-      pg.add_task(es, total=epochs, res="")
-    pg.advance(pg.tasks[es], start_epoch - 1)
+  if es in pg.tasks:
+    pg.pg.reset(pg.tasks[es], total=epochs)
+  else:
+    pg.add_task(es, total=epochs, res="", visible=epochs > 1)
+  pg.advance(pg.tasks[es], start_epoch - 1)
   if ss in pg.tasks:
     pg.pg.reset(pg.tasks[ss], total=ds.shape[0] * epochs, res="")
   else:
     pg.add_task(ss, total=ds.shape[0] * epochs, res="")
-  pg.advance(pg.tasks[ss], (start_step := max((start_epoch - 1), 0)))
+  pg.advance(pg.tasks[ss], (start_epoch - 1) * ds.shape[0])
 
   @eqx.filter_jit
   def _select(i: jax.Array, ii: jax.Array) -> DState[T]:
     return tree_at(
       lambda x: (x.epoch, x.step),
       jax.tree.map(lambda x: x[i, ii] if isinstance(x, jax.Array) else x, ds),
-      (i, i * ds.shape[0] + ii),
+      (i + 1, i * ds.shape[0] + ii + 1),
     )
 
   with PGThread(pg.pg, pg.tasks[ss]) as pts, PGThread(pg.pg, pg.tasks[es]) as pte:
-    for i in jnp.arange(start_epoch, epochs + 1):
+    for i in jnp.arange(start_epoch - 1, epochs):
       if epochs > 1:
         pte.completed += 1
-      for ii in jnp.arange(start_step, ds.shape[0]):
+      for ii in jnp.arange(ds.shape[0]):
         pts.completed += 1
         yield _select(i, ii)
 
@@ -184,7 +183,6 @@ def __test() -> None:
       pg.update_res(
         "DFAT-S", {"epoch": i.epoch.item(), "step": i.step.item(), "name": i.name}
       )
-      # pg.console.print(i)
       continue
     pg.console.print(i)
     pg.console.print("Drop Last: True, Auto Pad: True")
