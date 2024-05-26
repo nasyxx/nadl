@@ -1272,10 +1272,10 @@ license  : GPL-3.0+</p>
 <span class="normal">85</span>
 <span class="normal">86</span>
 <span class="normal">87</span>
-<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">](</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Train state.&quot;&quot;&quot;</span>
 
-  <span class="n">model</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">Module</span>
+  <span class="n">model</span><span class="p">:</span> <span class="n">M</span>
   <span class="n">tx</span><span class="p">:</span> <span class="n">optax</span><span class="o">.</span><span class="n">GradientTransformation</span>
   <span class="n">opt_state</span><span class="p">:</span> <span class="n">optax</span><span class="o">.</span><span class="n">OptState</span>
   <span class="n">loss</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span>
@@ -1285,12 +1285,12 @@ license  : GPL-3.0+</p>
   <span class="nd">@classmethod</span>
   <span class="nd">@abstractmethod</span>
   <span class="k">def</span> <span class="nf">create</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span>
-    <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
-  <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">]],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
+  <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create state.&quot;&quot;&quot;</span>
     <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-  <span class="k">def</span> <span class="nf">apply_grads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">grads</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+  <span class="k">def</span> <span class="nf">apply_grads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">grads</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply gradients.&quot;&quot;&quot;</span>
     <span class="n">updates</span><span class="p">,</span> <span class="n">opt_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
       <span class="n">cast</span><span class="p">(</span><span class="n">optax</span><span class="o">.</span><span class="n">Updates</span><span class="p">,</span> <span class="n">grads</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt_state</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">cast</span><span class="p">(</span><span class="n">optax</span><span class="o">.</span><span class="n">Params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
@@ -1341,7 +1341,7 @@ license  : GPL-3.0+</p>
 <span class="normal">85</span>
 <span class="normal">86</span>
 <span class="normal">87</span>
-<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply_grads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">grads</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply_grads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">grads</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">]:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Apply gradients.&quot;&quot;&quot;</span>
   <span class="n">updates</span><span class="p">,</span> <span class="n">opt_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
     <span class="n">cast</span><span class="p">(</span><span class="n">optax</span><span class="o">.</span><span class="n">Updates</span><span class="p">,</span> <span class="n">grads</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt_state</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">cast</span><span class="p">(</span><span class="n">optax</span><span class="o">.</span><span class="n">Params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
@@ -1387,8 +1387,8 @@ license  : GPL-3.0+</p>
 <span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="nd">@abstractmethod</span>
 <span class="k">def</span> <span class="nf">create</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span>
-  <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+  <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">]],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">]:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Create state.&quot;&quot;&quot;</span>
   <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 </code></pre></div></td></tr></table></div>
@@ -1530,7 +1530,9 @@ license  : GPL-3.0+</p>
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
-<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">IdxDataloader</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">IdxDataloader</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Simple index dataloader.&quot;&quot;&quot;</span>
 
   <span class="n">length</span><span class="p">:</span> <span class="nb">int</span>
@@ -1575,7 +1577,9 @@ license  : GPL-3.0+</p>
 
     <span class="n">idxes</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">idxes</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pad</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">idxes</span><span class="o">.</span><span class="n">dtype</span><span class="p">)]</span>
     <span class="n">idxes</span> <span class="o">=</span> <span class="n">idxes</span><span class="p">[:</span> <span class="n">length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">DState</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">idxes</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">idxes</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">idxes</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">DState</span><span class="p">(</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">idxes</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">idxes</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span> <span class="n">idxes</span><span class="o">.</span><span class="n">shape</span>
+    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1622,7 +1626,9 @@ license  : GPL-3.0+</p>
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
-<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@eqx</span><span class="o">.</span><span class="n">filter_jit</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@eqx</span><span class="o">.</span><span class="n">filter_jit</span>
 <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DState</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Get the indexes.&quot;&quot;&quot;</span>
   <span class="n">idxes</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
@@ -1638,7 +1644,9 @@ license  : GPL-3.0+</p>
 
   <span class="n">idxes</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">idxes</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pad</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">idxes</span><span class="o">.</span><span class="n">dtype</span><span class="p">)]</span>
   <span class="n">idxes</span> <span class="o">=</span> <span class="n">idxes</span><span class="p">[:</span> <span class="n">length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
-  <span class="k">return</span> <span class="n">DState</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">idxes</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">idxes</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">idxes</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">DState</span><span class="p">(</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">idxes</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">idxes</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span> <span class="n">idxes</span><span class="o">.</span><span class="n">shape</span>
+  <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3120,9 +3128,7 @@ idx: Current key idx in the key sequence.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/data.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
@@ -3165,7 +3171,9 @@ idx: Current key idx in the key sequence.</p>
 <span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
-<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">es_loop</span><span class="p">[</span><span class="n">T</span><span class="p">](</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">es_loop</span><span class="p">[</span><span class="n">T</span><span class="p">](</span>
   <span class="n">loader</span><span class="p">:</span> <span class="n">IdxDataloader</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
   <span class="n">pg</span><span class="p">:</span> <span class="n">PG</span><span class="p">,</span>
   <span class="n">keys</span><span class="p">:</span> <span class="n">Keys</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
