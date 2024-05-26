@@ -120,7 +120,9 @@ class IdxDataloader[T](eqx.Module):
 
     idxes = jnp.r_[idxes, jnp.full(self.pad, -1, idxes.dtype)]
     idxes = idxes[: length + self.pad].reshape(-1, self.batch_size)
-    return DState(self.transform(idxes), jnp.where(idxes == -1, 1, 0), idxes.shape)
+    return DState(
+      self.transform(idxes), jnp.where(idxes == -1, 0, 1).astype(bool), idxes.shape
+    )
 
 
 def es_loop[T](
