@@ -57,10 +57,10 @@ if TYPE_CHECKING:
   from rich.console import Console
 
 
-class BaseTrainState[T](eqx.Module):
+class BaseTrainState[T, M](eqx.Module):
   """Train state."""
 
-  model: eqx.Module
+  model: M
   tx: optax.GradientTransformation
   opt_state: optax.OptState
   loss: jax.Array
@@ -70,12 +70,12 @@ class BaseTrainState[T](eqx.Module):
   @classmethod
   @abstractmethod
   def create[**P](
-    cls: type[BaseTrainState[T]], *args: P.args, **kwds: P.kwargs
-  ) -> BaseTrainState[T]:
+    cls: type[BaseTrainState[T, M]], *args: P.args, **kwds: P.kwargs
+  ) -> BaseTrainState[T, M]:
     """Create state."""
     raise NotImplementedError
 
-  def apply_grads(self, loss: jax.Array, grads: eqx.Module) -> BaseTrainState[T]:
+  def apply_grads(self, loss: jax.Array, grads: eqx.Module) -> BaseTrainState[T, M]:
     """Apply gradients."""
     updates, opt_state = self.tx.update(
       cast(optax.Updates, grads), self.opt_state, params=cast(optax.Params, self.model)
