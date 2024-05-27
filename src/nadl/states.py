@@ -65,7 +65,7 @@ class BaseTrainState[T, M](eqx.Module):
   opt_state: optax.OptState
   loss: jax.Array
   step: jax.Array
-  conf: T | None = None
+  conf: T
 
   @classmethod
   @abstractmethod
