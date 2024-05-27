@@ -73,9 +73,15 @@ def classit(
       raise ValueError(f"Unknown method {method}")
 
 
-def pformat(xs: Mapping[str, float | int | str | None]) -> str:
+def pformat(xs: Mapping[str, jax.Array | float | int | str | None]) -> str:
   """Pretty format."""
   with (console := Console()).capture() as capture:
-    nxs = jax.tree.map(lambda x: float(f"{x:.4f}") if isinstance(x, float) else x, xs)
+    nxs = jax.tree.map(
+      lambda x: float(f"{x:.4f}")
+      if isinstance(x, float)
+      or (isinstance(x, jax.Array) and x.ndim <= 1 and x.shape[0] == 1)
+      else x,
+      xs,
+    )
     console.print(nxs, soft_wrap=True, justify="left", no_wrap=True, width=40)
   return capture.get()
