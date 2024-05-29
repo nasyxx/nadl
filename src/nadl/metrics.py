@@ -35,11 +35,13 @@ license  : GPL-3.0+
 * Metric class and functions
 * Some simple metrics that not in optax loss.  For complex metrics, use sklearn.
 """
+# ruff: noqa: F722
 
+from functools import partial
 import operator
 from abc import abstractmethod
 from collections.abc import Callable
-
+import sklearn.metrics as m
 import jax
 import jax.numpy as jnp
 from equinox import (
@@ -52,6 +54,8 @@ from equinox import (
   tree_at,
   tree_equal,
   tree_pformat,
+  filter_vmap,
+  filter_pure_callback,
 )
 
 from jaxtyping import Array, Int, Num
@@ -59,7 +63,7 @@ from typing import Literal, Self
 
 from .utils import filter_concat
 
-type N = Num[Array, "#a"]  # noqa: F722
+type N = Num[Array, "#a"]
 
 
 def convert(x: float | Num | None) -> N:
@@ -69,6 +73,44 @@ def convert(x: float | Num | None) -> N:
   if isinstance(x, jax.Array):
     return x.reshape(-1)
   return jnp.asarray(x).reshape(-1)
+
+
+def roc_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> N:
+  """Compute ROC."""
+  return jax.pure_callback(
+    m.roc_auc_score, jax.ShapeDtypeStruct((), jnp.float32), labels, preds
+  )
+
+
+def average_precision_score(
+  labels: Num[Array, " A"],
+  preds: Num[Array, " A"],
+  average: Literal["micro", "macro"] = "macro",
+) -> N:
+  """Compute PR."""
+  return jax.pure_callback(
+    partial(m.average_precision_score, average=average),
+    jax.ShapeDtypeStruct((), jnp.float32),
+    labels,
+    preds,
+  )
+
+
+def pr_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> N:
+  """Compute PR."""
+  precision, recall, _ = filter_pure_callback(
+    m.precision_recall_curve,
+    labels,
+    preds,
+    result_shape_dtypes=(
+      jax.ShapeDtypeStruct((preds.shape[0] + 1,), jnp.float32),
+      jax.ShapeDtypeStruct((preds.shape[0] + 1,), jnp.float32),
+      jax.ShapeDtypeStruct((preds.shape[0],), jnp.float32),
+    ),
+  )
+  return jax.pure_callback(
+    m.auc, jax.ShapeDtypeStruct((), jnp.float32), recall, precision
+  )
 
 
 class AbstractMetric(Module):
@@ -96,7 +138,7 @@ class AbstractMetric(Module):
     return tree_pformat(self, short_arrays=False)
 
   @abstractmethod
-  def __getitem__(self, idx: int | Int[Array, "#b"]) -> Self:  # noqa: F722
+  def __getitem__(self, idx: int | Int[Array, "#b"]) -> Self:
     """Get item."""
     raise NotImplementedError
 
@@ -141,11 +183,33 @@ class Metric(AbstractMetric):
     """Representation."""
     return tree_pformat(self, short_arrays=False)
 
-  def __getitem__(self, idx: int | Int[Array, "#b"]) -> Self:  # noqa: F722
+  def __getitem__(self, idx: int | Int[Array, "#b"]) -> Self:
     """Get item."""
     if self.value is None:
       raise ValueError("No value.")
     return tree_at(lambda x: x.value, self, self.value[idx])
+
+
+class Accuracy(Metric):
+  """Accuracy."""
+
+  @classmethod
+  def create(
+    cls,
+    target: Num[Array, "*b a"],
+    pred: Num[Array, "*b a"],
+    name: str = "accuracy",
+  ) -> Self:
+    """Create from data."""
+    if target.shape != pred.shape:
+      raise ValueError(f"Shape not match: {target.shape=} != {pred.shape=}")
+    match target.ndim:
+      case 1:
+        return cls(value=jnp.mean(target == pred), name=name)
+      case 2:
+        return cls(value=jnp.mean(target == pred, axis=1), name=name)
+      case _:
+        raise ValueError(f"Unsupported shape: {target.shape=}")
 
 
 class GroupMetric(AbstractMetric):
@@ -186,6 +250,44 @@ class GroupMetric(AbstractMetric):
         return self.metrics[which].best_idx()
       case _:
         raise TypeError("which should be int or list[m] -> m.")
+
+
+class AccRocPR(GroupMetric):
+  """Accuracy, ROC, PR."""
+
+  @classmethod
+  def create(
+    cls,
+    target: Num[Array, "*b a"],
+    pred: Num[Array, "*b a"],
+    name: str = "rocpr",
+  ) -> Self:
+    """Create from data."""
+    if target.shape != pred.shape:
+      raise ValueError(f"Shape not match: {target.shape=} != {pred.shape=}")
+    match target.ndim:
+      case 1:
+        return cls(
+          metrics=[
+            Metric(value=jnp.mean(target == pred), name="acc"),
+            Metric(value=roc_auc_score(target, pred), name="roc"),
+            Metric(value=pr_auc_score(target, pred), name="pr"),
+            Metric(value=average_precision_score(target, pred), name="ap"),
+          ],
+          name=name,
+        )
+      case 2:
+        return cls(
+          metrics=[
+            Metric(value=jnp.mean(target == pred, axis=1), name="acc"),
+            Metric(value=jax.vmap(roc_auc_score)(target, pred), name="roc"),
+            Metric(value=filter_vmap(pr_auc_score)(target, pred), name="pr"),
+            Metric(value=filter_vmap(average_precision_score)(target, pred), name="ap"),
+          ],
+          name=name,
+        )
+      case _:
+        raise ValueError(f"Unsupported shape: {target.shape=}")
 
 
 def dice_coef(y_true: jax.Array, y_pred: jax.Array, eps: float = 1e-8) -> jax.Array:

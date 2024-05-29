@@ -38,7 +38,15 @@ NADL
 from .data import DState, IdxDataloader, es_loop
 from .keys import Keys, new_key
 from .loops import PG, RESC, PGThread
-from .metrics import AbstractMetric, GroupMetric, Metric, dice_coef, iou_coef
+from .metrics import (
+  AbstractMetric,
+  GroupMetric,
+  Metric,
+  dice_coef,
+  iou_coef,
+  Accuracy,
+  AccRocPR,
+)
 from .preprocessing import (
   SCALER,
   identity_scaler,
@@ -63,6 +71,8 @@ __all__ = [
   "RESC",
   "SCALER",
   "AbstractMetric",
+  "AccRocPR",
+  "Accuracy",
   "BaseTrainState",
   "DState",
   "GroupMetric",

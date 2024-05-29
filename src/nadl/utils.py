@@ -35,13 +35,16 @@ license  : GPL-3.0+
 Utils
 """
 
-from collections.abc import Callable, Mapping, Sequence
-from typing import Any, Literal
+from collections.abc import Callable, Sequence
+
+import equinox as eqx
 import jax
 import jax.numpy as jnp
-from rich.console import Console
+
 from jaxtyping import PyTree
-import equinox as eqx
+from typing import Any, Literal
+
+from rich.console import Console
 
 
 def rle_array(x: jax.Array, shift: int = 1) -> jax.Array:
