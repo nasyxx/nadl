@@ -35,11 +35,13 @@ license  : GPL-3.0+
 Utils
 """
 
-from collections.abc import Mapping
-from typing import Literal
+from collections.abc import Callable, Mapping, Sequence
+from typing import Any, Literal
 import jax
 import jax.numpy as jnp
 from rich.console import Console
+from jaxtyping import PyTree
+import equinox as eqx
 
 
 def rle_array(x: jax.Array, shift: int = 1) -> jax.Array:
@@ -73,15 +75,20 @@ def classit(
       raise ValueError(f"Unknown method {method}")
 
 
-def pformat(xs: Mapping[str, jax.Array | float | int | str | None]) -> str:
+def pformat(xs: PyTree, short_arrays: bool = False) -> str:
   """Pretty format."""
   with (console := Console()).capture() as capture:
-    nxs = jax.tree.map(
-      lambda x: float(f"{x:.4f}")
-      if isinstance(x, float)
-      or (isinstance(x, jax.Array) and x.ndim <= 1 and x.shape[0] == 1)
-      else x,
-      xs,
-    )
+    nxs = eqx.tree_pformat(xs, short_arrays=short_arrays)
     console.print(nxs, soft_wrap=True, justify="left", no_wrap=True, width=40)
   return capture.get()
+
+
+def filter_concat[T](
+  xs: Sequence[T],
+  filter_spec: Callable[[Any], bool] = eqx.is_array,
+  select_idx: int = -1,
+) -> T:
+  """Filter concat."""
+  t1, t2 = eqx.partition(xs, filter_spec=filter_spec)
+  t1 = jax.tree.map(lambda *x: jnp.r_[x], *t1)
+  return eqx.combine(t1, t2[select_idx])
