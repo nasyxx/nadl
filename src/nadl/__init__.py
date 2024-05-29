@@ -38,7 +38,7 @@ NADL
 from .data import DState, IdxDataloader, es_loop
 from .keys import Keys, new_key
 from .loops import PG, RESC, PGThread
-from .metrics import dice_coef, iou_coef
+from .metrics import AbstractMetric, GroupMetric, Metric, dice_coef, iou_coef
 from .preprocessing import (
   SCALER,
   identity_scaler,
@@ -50,29 +50,36 @@ from .preprocessing import (
 from .states import BaseTrainState, state_fn
 from .utils import (
   classit,
+  filter_concat,
+  pformat,
   rle,
   rle_array,
 )
 
-__version__ = "1.5.0"
+__version__ = "1.5.1"
 
 __all__ = [
   "PG",
   "RESC",
   "SCALER",
+  "AbstractMetric",
   "BaseTrainState",
   "DState",
+  "GroupMetric",
   "IdxDataloader",
   "Keys",
+  "Metric",
   "PGThread",
   "classit",
   "dice_coef",
   "es_loop",
+  "filter_concat",
   "identity_scaler",
   "iou_coef",
   "min_max_scaler",
   "new_key",
   "normalizer",
+  "pformat",
   "rle",
   "rle_array",
   "select_scaler",
