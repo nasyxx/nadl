@@ -138,7 +138,7 @@ class AbstractMetric(Module):
     return tree_pformat(self, short_arrays=False)
 
   @abstractmethod
-  def __getitem__(self, idx: int | Int[Array, "#b"]) -> Self:
+  def __getitem__(self, idx: int | Int[Array, "#b"] | slice) -> Self:
     """Get item."""
     raise NotImplementedError
 
@@ -183,7 +183,7 @@ class Metric(AbstractMetric):
     """Representation."""
     return tree_pformat(self, short_arrays=False)
 
-  def __getitem__(self, idx: int | Int[Array, "#b"]) -> Self:
+  def __getitem__(self, idx: int | Int[Array, "#b"] | slice) -> Self:
     """Get item."""
     if self.value is None:
       raise ValueError("No value.")
@@ -215,7 +215,7 @@ class Accuracy(Metric):
 class GroupMetric(AbstractMetric):
   """Group Metric."""
 
-  metrics: list[Metric]
+  metrics: list[AbstractMetric]
   name: str | None = None
 
   def __or__(self, value: Self) -> Self:
@@ -231,7 +231,7 @@ class GroupMetric(AbstractMetric):
       raise ValueError(f"Name not match: this {self.name=} != {value.name=}")
     return filter_concat([self, value])
 
-  def __getitem__(self, idx: int | Array) -> Self:
+  def __getitem__(self, idx: int | Array | slice) -> Self:
     """Get item."""
     return tree_at(
       lambda x: x.metrics, self, jax.tree.map(operator.itemgetter(idx), self.metrics)
