@@ -113,7 +113,7 @@ def pr_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> N:
   )
 
 
-class AbstractMetric(Module):
+class AbstractMetric[**P](Module):
   """Abstract Metric."""
 
   name: AbstractVar[str | None]
@@ -128,8 +128,11 @@ class AbstractMetric(Module):
     """Add."""
     raise NotImplementedError
 
-  @abstractmethod
-  def best(self) -> Self:
+  def best(self, *args: P.args, **kwgs: P.kwargs) -> Self:
+    """Best value."""
+    return self[self.best_idx(*args, **kwgs)]
+
+  def best_idx(self, *args: P.args, **kwgs: P.kwargs) -> Int[Array, "1"]:
     """Best value."""
     raise NotImplementedError
 
@@ -171,10 +174,6 @@ class Metric(AbstractMetric):
     """Worst value."""
     return jnp.nanargmin(self.value)
 
-  def best(self) -> Self:
-    """Best value."""
-    return self[self.best_idx()]
-
   def best_idx(self) -> Int[Array, "1"]:
     """Best value."""
     return self._max() if self.order == "max" else self._min()
@@ -211,6 +210,14 @@ class Accuracy(Metric):
       case _:
         raise ValueError(f"Unsupported shape: {target.shape=}")
 
+  @classmethod
+  def create_empty(cls, name: str = "accuracy") -> Self:
+    """Create empty."""
+    return cls(
+      value=jnp.nan,
+      name=name
+    )
+
 
 class GroupMetric(AbstractMetric):
   """Group Metric."""
@@ -237,11 +244,9 @@ class GroupMetric(AbstractMetric):
       lambda x: x.metrics, self, jax.tree.map(operator.itemgetter(idx), self.metrics)
     )
 
-  def best(self, which: int | Callable[[list[Metric]], Metric]) -> Self:
-    """Best value."""
-    return self[self.best_idx(which)]
-
-  def best_idx(self, which: int | Callable[[list[Metric]], Metric]) -> Int[Array, "1"]:
+  def best_idx(
+    self, which: int | Callable[[list[AbstractMetric]], Metric]
+  ) -> Int[Array, "1"]:
     """Best value."""
     match which:
       case Callable():
@@ -260,7 +265,7 @@ class AccRocPR(GroupMetric):
     cls,
     target: Num[Array, "*b a"],
     pred: Num[Array, "*b a"],
-    name: str = "rocpr",
+    name: str = "accrocpr",
   ) -> Self:
     """Create from data."""
     if target.shape != pred.shape:
@@ -288,6 +293,19 @@ class AccRocPR(GroupMetric):
         )
       case _:
         raise ValueError(f"Unsupported shape: {target.shape=}")
+
+  @classmethod
+  def create_empty(cls, name: str = "accrocpr") -> Self:
+    """Create empty."""
+    return cls(
+      metrics=[
+        Metric(value=jnp.nan, name="acc"),
+        Metric(value=jnp.nan, name="roc"),
+        Metric(value=jnp.nan, name="pr"),
+        Metric(value=jnp.nan, name="ap"),
+      ],
+      name=name
+    )
 
 
 def dice_coef(y_true: jax.Array, y_pred: jax.Array, eps: float = 1e-8) -> jax.Array:

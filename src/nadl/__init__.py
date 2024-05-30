@@ -40,12 +40,16 @@ from .keys import Keys, new_key
 from .loops import PG, RESC, PGThread
 from .metrics import (
   AbstractMetric,
+  AccRocPR,
+  Accuracy,
   GroupMetric,
   Metric,
+  average_precision_score,
+  convert,
   dice_coef,
   iou_coef,
-  Accuracy,
-  AccRocPR,
+  pr_auc_score,
+  roc_auc_score,
 )
 from .preprocessing import (
   SCALER,
@@ -64,7 +68,7 @@ from .utils import (
   rle_array,
 )
 
-__version__ = "1.5.3"
+__version__ = "1.5.4"
 
 __all__ = [
   "PG",
@@ -80,7 +84,9 @@ __all__ = [
   "Keys",
   "Metric",
   "PGThread",
+  "average_precision_score",
   "classit",
+  "convert",
   "dice_coef",
   "es_loop",
   "filter_concat",
@@ -90,8 +96,10 @@ __all__ = [
   "new_key",
   "normalizer",
   "pformat",
+  "pr_auc_score",
   "rle",
   "rle_array",
+  "roc_auc_score",
   "select_scaler",
   "standard_scaler",
   "state_fn",
