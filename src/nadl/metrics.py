@@ -35,11 +35,8 @@ license  : GPL-3.0+
 * Metric class and functions
 * Some simple metrics that not in optax loss.  For complex metrics, use sklearn.
 """
-# ruff: noqa: F722
 
-import operator
-from abc import abstractmethod
-from collections.abc import Callable
+# ruff: noqa: F722
 from functools import partial
 
 import jax
@@ -48,32 +45,27 @@ from equinox import (
   AbstractVar,
   Module,
   combine,
-  field,
   filter_pure_callback,
-  filter_vmap,
   is_array,
   partition,
-  tree_at,
   tree_equal,
   tree_pformat,
 )
 
-from jaxtyping import Array, Int, Num
-from typing import Any, Literal, Self
+from jaxtyping import Array, ArrayLike, Int, Num
+from typing import Literal, Self
 
 import sklearn.metrics as m
 
-from .utils import filter_concat
+from .utils import all_array, filter_concat
 
 type N = Num[Array, "#a"]
 
 
-def convert(x: float | Num | None) -> N:
+def convert(x: ArrayLike | N) -> N:
   """Convert to float."""
-  if x is None:
-    return jnp.asarray(jnp.nan).reshape(-1)
   if isinstance(x, jax.Array):
-    return x.reshape(-1)
+    return x.reshape(-1, *x.shape[1:])
   return jnp.asarray(x).reshape(-1)
 
 
@@ -115,210 +107,74 @@ def pr_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> N:
   )
 
 
-class AbstractMetric[**P](Module):
-  """Abstract Metric."""
+class Metric[**P, T](Module):
+  """Base Metric."""
 
   name: AbstractVar[str | None]
 
-  @abstractmethod
-  def __or__(self, value: Self) -> Self:
-    """Or."""
-    raise NotImplementedError
+  def __post_init__(self) -> None:
+    """Post init."""
+    for k, v in self.__dict__.items():
+      if isinstance(v, ArrayLike):
+        self.__dict__[k] = convert(v)
 
-  @abstractmethod
-  def __add__(self, value: Self) -> Self:
-    """Add."""
-    raise NotImplementedError
+  def __check_init__(self) -> None:  # noqa: PLW3201
+    """Check init."""
+    if not tree_equal(*jax.tree.map(lambda x: jnp.shape(x)[0], all_array(self))):
+      raise ValueError("All metrics should have the same length in first dim.")
 
-  def best(self, *args: P.args, **kwgs: P.kwargs) -> Self:
-    """Best value."""
-    return self[self.best_idx(*args, **kwgs)]
-
-  def best_idx(self, *args: P.args, **kwgs: P.kwargs) -> Int[Array, "1"]:
-    """Best value."""
-    raise NotImplementedError
-
-  def __repr__(self) -> str:
-    """Representation."""
-    return tree_pformat(self, short_arrays=True)
-
-  @abstractmethod
-  def __getitem__(self, idx: int | Int[Array, "#b"] | slice) -> Self:
-    """Get item."""
-    raise NotImplementedError
-
-  def to_tuple(self) -> tuple[str | None, Any]:
-    """To dict."""
-    raise NotImplementedError
-
-
-class Metric(AbstractMetric):
-  """Base Metric."""
-
-  value: N = field(default=jnp.nan, converter=convert)
-  order: Literal["max", "min"] = "max"
-  name: str | None = None
-
-  def __or__(self, value: Self) -> Self:
-    """Or."""
-    s1, _ = partition(self, lambda x: is_array(x) and (not jnp.isnan(x).any()))
-    return combine(s1, value)
+  @classmethod
+  def merge(cls, *metrics: Self) -> Self:
+    """Merge all metrics."""
+    _, s2 = partition(metrics, is_array)
+    if not tree_equal(*s2):
+      raise ValueError("All metrics should have the same non-array values.")
+    return filter_concat(metrics)
 
   def __add__(self, value: Self) -> Self:
     """Add."""
-    if self.name != value.name:
-      raise ValueError(f"Name not match: this {self.name=} != {value.name=}")
-    if self.order != value.order:
-      raise ValueError(f"Order not match: this {self.order=} != {value.order=}")
-    return filter_concat([self, value])
+    return self.merge(self, value)
 
-  def _max(self) -> Int[Array, "1"]:
-    """Best value."""
-    return jnp.nanargmax(self.value)
+  def __or__(self, value: Self) -> Self:
+    """Or."""
+    return combine(self, value)
 
-  def _min(self) -> Int[Array, "1"]:
-    """Worst value."""
-    return jnp.nanargmin(self.value)
+  @classmethod
+  def empty(cls, *args: P.args, **kwds: P.kwargs) -> Self:
+    """Empty."""
+    raise NotImplementedError
 
-  def best_idx(self) -> Int[Array, "1"]:
-    """Best value."""
-    return self._max() if self.order == "max" else self._min()
+  def compute(self) -> T:
+    """Compute."""
+    raise NotImplementedError
 
-  def __getitem__(self, idx: int | Int[Array, "#b"] | slice) -> Self:
+  def __getitem__(self, idx: int | slice | Int[ArrayLike, "..."]) -> Self:
     """Get item."""
-    if self.value is None:
-      raise ValueError("No value.")
-    return tree_at(lambda x: x.value, self, self.value[idx])
+    return jax.tree.map(
+      lambda x: x[idx] if is_array(x) else x,
+      self,
+    )
 
-  def to_tuple(self) -> tuple[str | None, N | float]:
-    """To dict."""
-    if self.value.ndim <= 1:
-      return self.name, self.value.item()
-    return self.name, self.value
+  def show(self) -> str:
+    """Show."""
+    return tree_pformat(self, short_arrays=False)
 
 
 class Accuracy(Metric):
   """Accuracy."""
 
-  @classmethod
-  def create(
-    cls,
-    target: Num[Array, "*b a"],
-    pred: Num[Array, "*b a"],
-    name: str = "accuracy",
-  ) -> Self:
-    """Create from data."""
-    if target.shape != pred.shape:
-      raise ValueError(f"Shape not match: {target.shape=} != {pred.shape=}")
-    match target.ndim:
-      case 1:
-        return cls(value=jnp.mean(target == pred), name=name)
-      case 2:
-        return cls(value=jnp.mean(target == pred, axis=1), name=name)
-      case _:
-        raise ValueError(f"Unsupported shape: {target.shape=}")
+  labels: Int[Array, "..."]
+  preds: Int[Array, "..."]
+  name: str = "accuracy"
 
   @classmethod
-  def create_empty(cls, name: str = "accuracy") -> Self:
-    """Create empty."""
-    return cls(value=jnp.nan, name=name)
+  def empty(cls, name: str = "accuracy") -> Self:
+    """Empty."""
+    return cls(labels=jnp.asarray([jnp.nan]), preds=jnp.asarray([jnp.nan]), name=name)
 
-
-class GroupMetric(AbstractMetric):
-  """Group Metric."""
-
-  metrics: list[AbstractMetric]
-  name: str | None = None
-
-  def __or__(self, value: Self) -> Self:
-    """Or."""
-    if tree_equal(*jax.tree.map(jnp.shape, [self.metrics, value.metrics])):
-      s1, _ = partition(self, lambda x: is_array(x) and (not jnp.isnan(x).all()))
-      return combine(s1, value)
-    raise ValueError("Shape not match.")
-
-  def __add__(self, value: Self) -> Self:
-    """Add."""
-    if self.name != value.name:
-      raise ValueError(f"Name not match: this {self.name=} != {value.name=}")
-    return filter_concat([self, value])
-
-  def __getitem__(self, idx: int | Array | slice) -> Self:
-    """Get item."""
-    return tree_at(
-      lambda x: x.metrics, self, jax.tree.map(operator.itemgetter(idx), self.metrics)
-    )
-
-  def __repr__(self) -> str:
-    """Representation."""
-    return tree_pformat(self.to_tuple(), short_arrays=True)
-
-  def best_idx(
-    self, which: int | Callable[[list[AbstractMetric]], Metric]
-  ) -> Int[Array, "1"]:
-    """Best value."""
-    match which:
-      case Callable():
-        return which(self.metrics).best_idx()
-      case int():
-        return self.metrics[which].best_idx()
-      case _:
-        raise TypeError("which should be int or list[m] -> m.")
-
-  def to_tuple(self) -> tuple[str | None, list]:
-    """To dict."""
-    return self.name, [m.to_tuple() for m in self.metrics]
-
-
-class AccRocPR(GroupMetric):
-  """Accuracy, ROC, PR."""
-
-  @classmethod
-  def create(
-    cls,
-    target: Num[Array, "*b a"],
-    pred: Num[Array, "*b a"],
-    name: str = "accrocpr",
-  ) -> Self:
-    """Create from data."""
-    if target.shape != pred.shape:
-      raise ValueError(f"Shape not match: {target.shape=} != {pred.shape=}")
-    match target.ndim:
-      case 1:
-        return cls(
-          metrics=[
-            Metric(value=jnp.mean(target == pred), name="acc"),
-            Metric(value=roc_auc_score(target, pred), name="roc"),
-            Metric(value=pr_auc_score(target, pred), name="pr"),
-            Metric(value=average_precision_score(target, pred), name="ap"),
-          ],
-          name=name,
-        )
-      case 2:
-        return cls(
-          metrics=[
-            Metric(value=jnp.mean(target == pred, axis=1), name="acc"),
-            Metric(value=jax.vmap(roc_auc_score)(target, pred), name="roc"),
-            Metric(value=filter_vmap(pr_auc_score)(target, pred), name="pr"),
-            Metric(value=filter_vmap(average_precision_score)(target, pred), name="ap"),
-          ],
-          name=name,
-        )
-      case _:
-        raise ValueError(f"Unsupported shape: {target.shape=}")
-
-  @classmethod
-  def create_empty(cls, name: str = "accrocpr") -> Self:
-    """Create empty."""
-    return cls(
-      metrics=[
-        Metric(value=jnp.nan, name="acc"),
-        Metric(value=jnp.nan, name="roc"),
-        Metric(value=jnp.nan, name="pr"),
-        Metric(value=jnp.nan, name="ap"),
-      ],
-      name=name,
-    )
+  def compute(self) -> Array:
+    """Compute."""
+    return jnp.nanmean(self.labels == self.preds, axis=-1)
 
 
 def dice_coef(y_true: jax.Array, y_pred: jax.Array, eps: float = 1e-8) -> jax.Array:
@@ -341,11 +197,3 @@ def iou_coef(y_true: jax.Array, y_pred: jax.Array, eps: float = 1e-8) -> jax.Arr
   union = jnp.sum(y_true) + jnp.sum(y_pred) - intersection
 
   return intersection / (union + eps)
-
-
-if __name__ == "__main__":
-  print(
-    GroupMetric(
-      metrics=[AccRocPR.create_empty(name="rank"), AccRocPR.create_empty(name="comp")]
-    )
-  )

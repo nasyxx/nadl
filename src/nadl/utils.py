@@ -93,5 +93,10 @@ def filter_concat[T](
 ) -> T:
   """Filter concat."""
   t1, t2 = eqx.partition(xs, filter_spec=filter_spec)
-  t1 = jax.tree.map(lambda *x: jnp.r_[x], *t1)
+  t1 = jax.tree.map(lambda *x: jnp.r_[*x], *t1)
   return eqx.combine(t1, t2[select_idx])
+
+
+def all_array(x: PyTree) -> list[jax.Array]:
+  """All array."""
+  return jax.tree.leaves(eqx.filter(x, eqx.is_array))

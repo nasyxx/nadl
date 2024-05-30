@@ -39,10 +39,7 @@ from .data import DState, IdxDataloader, es_loop
 from .keys import Keys, new_key
 from .loops import PG, RESC, PGThread
 from .metrics import (
-  AbstractMetric,
-  AccRocPR,
   Accuracy,
-  GroupMetric,
   Metric,
   average_precision_score,
   convert,
@@ -61,6 +58,7 @@ from .preprocessing import (
 )
 from .states import BaseTrainState, state_fn
 from .utils import (
+  all_array,
   classit,
   filter_concat,
   pformat,
@@ -68,22 +66,21 @@ from .utils import (
   rle_array,
 )
 
-__version__ = "1.5.5"
+__version__ = "1.5.6"
 
 __all__ = [
   "PG",
   "RESC",
   "SCALER",
-  "AbstractMetric",
-  "AccRocPR",
   "Accuracy",
   "BaseTrainState",
   "DState",
-  "GroupMetric",
   "IdxDataloader",
   "Keys",
   "Metric",
+  "Metric",
   "PGThread",
+  "all_array",
   "average_precision_score",
   "classit",
   "convert",
