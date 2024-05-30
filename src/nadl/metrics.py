@@ -37,11 +37,11 @@ license  : GPL-3.0+
 """
 # ruff: noqa: F722
 
-from functools import partial
 import operator
 from abc import abstractmethod
 from collections.abc import Callable
-import sklearn.metrics as m
+from functools import partial
+
 import jax
 import jax.numpy as jnp
 from equinox import (
@@ -49,17 +49,19 @@ from equinox import (
   Module,
   combine,
   field,
+  filter_pure_callback,
+  filter_vmap,
   is_array,
   partition,
   tree_at,
   tree_equal,
   tree_pformat,
-  filter_vmap,
-  filter_pure_callback,
 )
 
 from jaxtyping import Array, Int, Num
-from typing import Literal, Self
+from typing import Any, Literal, Self
+
+import sklearn.metrics as m
 
 from .utils import filter_concat
 
@@ -138,11 +140,15 @@ class AbstractMetric[**P](Module):
 
   def __repr__(self) -> str:
     """Representation."""
-    return tree_pformat(self, short_arrays=False)
+    return tree_pformat(self, short_arrays=True)
 
   @abstractmethod
   def __getitem__(self, idx: int | Int[Array, "#b"] | slice) -> Self:
     """Get item."""
+    raise NotImplementedError
+
+  def to_tuple(self) -> tuple[str | None, Any]:
+    """To dict."""
     raise NotImplementedError
 
 
@@ -178,15 +184,17 @@ class Metric(AbstractMetric):
     """Best value."""
     return self._max() if self.order == "max" else self._min()
 
-  def __repr__(self) -> str:
-    """Representation."""
-    return tree_pformat(self, short_arrays=False)
-
   def __getitem__(self, idx: int | Int[Array, "#b"] | slice) -> Self:
     """Get item."""
     if self.value is None:
       raise ValueError("No value.")
     return tree_at(lambda x: x.value, self, self.value[idx])
+
+  def to_tuple(self) -> tuple[str | None, N | float]:
+    """To dict."""
+    if self.value.ndim <= 1:
+      return self.name, self.value.item()
+    return self.name, self.value
 
 
 class Accuracy(Metric):
@@ -213,10 +221,7 @@ class Accuracy(Metric):
   @classmethod
   def create_empty(cls, name: str = "accuracy") -> Self:
     """Create empty."""
-    return cls(
-      value=jnp.nan,
-      name=name
-    )
+    return cls(value=jnp.nan, name=name)
 
 
 class GroupMetric(AbstractMetric):
@@ -244,6 +249,10 @@ class GroupMetric(AbstractMetric):
       lambda x: x.metrics, self, jax.tree.map(operator.itemgetter(idx), self.metrics)
     )
 
+  def __repr__(self) -> str:
+    """Representation."""
+    return tree_pformat(self.to_tuple(), short_arrays=True)
+
   def best_idx(
     self, which: int | Callable[[list[AbstractMetric]], Metric]
   ) -> Int[Array, "1"]:
@@ -255,6 +264,10 @@ class GroupMetric(AbstractMetric):
         return self.metrics[which].best_idx()
       case _:
         raise TypeError("which should be int or list[m] -> m.")
+
+  def to_tuple(self) -> tuple[str | None, list]:
+    """To dict."""
+    return self.name, [m.to_tuple() for m in self.metrics]
 
 
 class AccRocPR(GroupMetric):
@@ -304,7 +317,7 @@ class AccRocPR(GroupMetric):
         Metric(value=jnp.nan, name="pr"),
         Metric(value=jnp.nan, name="ap"),
       ],
-      name=name
+      name=name,
     )
 
 
@@ -328,3 +341,11 @@ def iou_coef(y_true: jax.Array, y_pred: jax.Array, eps: float = 1e-8) -> jax.Arr
   union = jnp.sum(y_true) + jnp.sum(y_pred) - intersection
 
   return intersection / (union + eps)
+
+
+if __name__ == "__main__":
+  print(
+    GroupMetric(
+      metrics=[AccRocPR.create_empty(name="rank"), AccRocPR.create_empty(name="comp")]
+    )
+  )
