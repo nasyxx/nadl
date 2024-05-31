@@ -113,12 +113,13 @@ class Metric[**P, T](Module):
   def __post_init__(self) -> None:
     """Post init."""
     for k, v in self.__dict__.items():
-      if isinstance(v, ArrayLike):
+      if isinstance(v, Array):
         self.__dict__[k] = convert(v)
 
   def __check_init__(self) -> None:  # noqa: PLW3201
     """Check init."""
-    if not tree_equal(*jax.tree.map(lambda x: jnp.shape(x)[0], all_array(self))):
+    arrs = all_array(self)
+    if arrs and (not tree_equal(*jax.tree.map(lambda x: jnp.shape(x)[0], arrs))):
       raise ValueError("All metrics should have the same length in first dim.")
 
   @classmethod
