@@ -104,7 +104,7 @@ def state_fn(
     case (None, None):
       item_names = ("state", "extra_metadata")
       item_handlers = {
-        "state": ocp.StandardCheckpointHandler(),
+        "state": ocp.PyTreeCheckpointHandler(),
         "extra_metadata": ocp.JsonCheckpointHandler(),
       }
     case _ if item_names and item_handlers:
@@ -136,7 +136,7 @@ def state_fn(
     mngr.save(
       step,
       args=ocp.args.Composite(
-        state=ocp.args.StandardSave(state),  # type: ignore
+        state=ocp.args.PyTreeSave(state),  # type: ignore
         extra_metadata=ocp.args.JsonSave(metadata or {}),  # type: ignore
       ),
     )
