@@ -95,7 +95,7 @@ def pr_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> N:
 
   def _callback(lbl: Num[Array, " A"], prd: Num[Array, " A"]) -> N:
     precision, recall, _ = m.precision_recall_curve(lbl, prd)
-    return jnp.asarray(m.auc(recall, precision)).reshape(-1)
+    return jnp.asarray(m.auc(recall, precision))
 
   return filter_pure_callback(
     _callback,
