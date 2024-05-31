@@ -139,9 +139,9 @@ class Metric[**P, T](Module):
     return combine(self, value)
 
   @classmethod
-  def empty(cls, *args: P.args, **kwds: P.kwargs) -> Self:
+  def empty(cls, *args: P.args, **kwds: P.kwargs) -> Self:  # noqa: ARG003
     """Empty."""
-    raise NotImplementedError
+    return cls(dict.fromkeys(cls.__dataclass_fields__))  # type: ignore
 
   def compute(self) -> T:
     """Compute."""
