@@ -92,18 +92,16 @@ def average_precision_score(
 
 def pr_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> N:
   """Compute PR."""
-  precision, recall, _ = filter_pure_callback(
-    m.precision_recall_curve,
+
+  def _callback(lbl: Num[Array, " A"], prd: Num[Array, " A"]) -> N:
+    precision, recall, _ = m.precision_recall_curve(lbl, prd)
+    return jnp.asarray(m.auc(recall, precision)).reshape(-1)
+
+  return filter_pure_callback(
+    _callback,
     labels,
     preds,
-    result_shape_dtypes=(
-      jax.ShapeDtypeStruct((preds.shape[0] + 1,), jnp.float32),
-      jax.ShapeDtypeStruct((preds.shape[0] + 1,), jnp.float32),
-      jax.ShapeDtypeStruct((preds.shape[0],), jnp.float32),
-    ),
-  )
-  return jax.pure_callback(
-    m.auc, jax.ShapeDtypeStruct((), jnp.float32), recall, precision
+    result_shape_dtypes=jax.ShapeDtypeStruct((), jnp.float32),
   )
 
 
