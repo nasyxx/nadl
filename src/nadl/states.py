@@ -56,6 +56,8 @@ if TYPE_CHECKING:
 
   from rich.console import Console
 
+  from .metrics import Metric
+
 
 class BaseTrainState[T, M](eqx.Module):
   """Train state."""
@@ -97,7 +99,8 @@ def state_fn(
   item_handlers: dict | None = None,
   best_fn: Callable[[PyTree], float] | None = None,
 ) -> tuple[
-  ocp.CheckpointManager, Callable[[int, BaseTrainState, dict[str, float] | None], None]
+  ocp.CheckpointManager,
+  Callable[[int, BaseTrainState, Metric | None, dict[str, float] | None], None],
 ]:
   """Get states manager."""
   match (item_names, item_handlers):
@@ -105,7 +108,7 @@ def state_fn(
       item_names = ("state", "extra_metadata")
       item_handlers = {
         "state": ocp.PyTreeCheckpointHandler(),
-        "extra_metadata": ocp.JsonCheckpointHandler(),
+        "extra_metadata": ocp.PyTreeCheckpointHandler(),
       }
     case _ if item_names and item_handlers:
       for i in item_names:
@@ -130,15 +133,19 @@ def state_fn(
   )
 
   def save(
-    step: int, state: BaseTrainState, metadata: dict[str, float] | None = None
+    step: int,
+    state: BaseTrainState,
+    metadata: Metric | None = None,
+    metrics: dict[str, float] | None = None,
   ) -> None:
     """Save state."""
     mngr.save(
       step,
       args=ocp.args.Composite(
         state=ocp.args.PyTreeSave(state),  # type: ignore
-        extra_metadata=ocp.args.JsonSave(metadata or {}),  # type: ignore
+        extra_metadata=ocp.args.PyTreeSave(metadata or {}),  # type: ignore
       ),
+      metrics=metrics or {},
     )
 
   return mngr, save
