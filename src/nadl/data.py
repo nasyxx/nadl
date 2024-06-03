@@ -35,28 +35,30 @@ license  : GPL-3.0+
 Simple dataset and dataloader.
 """
 
-from collections.abc import Callable, Iterator
+from __future__ import annotations
 
-import equinox as eqx
 import jax
 import jax.numpy as jnp
-from equinox import field, tree_at
-import numpy as np
+from equinox import Module, filter_jit, filter_vmap
 
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
+
+import numpy as np
 
 from .keys import Keys
 from .loops import PG, RESC, PGThread
 
+if TYPE_CHECKING:
+  from collections.abc import Iterator
 
-class DState[T](NamedTuple):
+
+class DState(NamedTuple):
   """Dataloader state."""
 
-  xs: T
+  xs: jax.Array
   pad: jax.Array
-  shape: tuple[int, ...]
-  epoch: jax.Array = field(default_factory=lambda: jnp.array(0))
-  step: jax.Array = field(default_factory=lambda: jnp.array(0))
+  epoch: jax.Array | None = None
+  step: jax.Array | None = None
   name: str | None = None
 
 
@@ -65,7 +67,7 @@ def _np_sort(x: jax.Array, axis: int | None = None) -> np.ndarray:
   return np.argsort(np.asarray(x), axis=axis)
 
 
-@eqx.filter_jit
+@filter_jit
 def fallback_argsort(x: jax.Array, axis: int | None = None) -> jax.Array:
   """Fallback to numpy argsort when CPU."""
   if jax.devices()[0].platform == "cpu":
@@ -75,36 +77,29 @@ def fallback_argsort(x: jax.Array, axis: int | None = None) -> jax.Array:
   return x.argsort(axis=axis)
 
 
-class IdxDataloader[T](eqx.Module):
+class IdxDataloader(Module):
   """Simple index dataloader."""
 
   length: int
   pad: int
   batch_size: int
-  drop_num: int = 0
-  transform: Callable[[jax.Array], T] = eqx.field(static=True, init=False)
+  drop_num: int
 
   def __init__(
     self,
     length: int,
     batch_size: int,
     drop_last: bool = False,
-    transform: Callable[[jax.Array], T] = lambda x: x,
   ) -> None:
     """Initiate the dataloader."""
     self.length = length
-
-    if drop_last:
-      self.drop_num = self.length % batch_size
-
     length = length if not drop_last else length - length % batch_size
     pad = (batch_size - r) % batch_size if (r := length % batch_size) else 0
-    self.pad = pad = pad if pad != batch_size else 0
-
+    self.pad = pad if pad != batch_size else 0
     self.batch_size = batch_size
-    self.transform = eqx.filter_jit(transform)
+    self.drop_num = self.length % batch_size if drop_last else 0
 
-  def __call__(self, key: jax.Array | None = None) -> DState[T]:
+  def __call__(self, key: jax.Array | None = None) -> DState:
     """Get the indexes."""
     idxes = jnp.arange(self.length)
     if key is not None:
@@ -119,57 +114,58 @@ class IdxDataloader[T](eqx.Module):
 
     idxes = jnp.r_[idxes, jnp.full(self.pad, -1, idxes.dtype)]
     idxes = idxes[: length + self.pad].reshape(-1, self.batch_size)
-    return DState(
-      self.transform(idxes), jnp.where(idxes == -1, 1, 0).astype(bool), idxes.shape
+    return DState(idxes, jnp.where(idxes == -1, 1, 0).astype(bool))
+
+  def __len__(self) -> int:
+    """Length of the dataloader."""
+    return self.length // self.batch_size + (
+      1 if (not self.drop_num) and self.length % self.batch_size else 0
     )
 
 
-def es_loop[T](
-  loader: IdxDataloader[T],
+def es_loop(
+  dl: IdxDataloader,
   pg: PG,
   keys: Keys | None = None,
-  epochs: int = 2,
+  epochs: int = 1,
   start_epoch: int = 1,
   prefix: str = "L",
   es: str = "E",
   ss: str = "S",
-) -> Iterator[DState[T]]:
+) -> Iterator[DState]:
   """Simple epoch loop."""
-  es, ss = f"{prefix}-{es}", f"{prefix}-{ss}"
   assert epochs > 0, "Epochs should be greater than 0."
-  if keys:
-    keys = jax.vmap(keys.reserve(epochs))
 
-  vdl = eqx.filter_jit(eqx.filter_vmap(loader, axis_size=1))
-  ds: DState[T] = vdl() if keys is None else vdl(keys(jnp.arange(epochs)))
-  ds = tree_at(lambda d: d.name, ds, prefix, is_leaf=lambda x: x is None)
+  kf = filter_jit(filter_vmap(keys.reserve(epochs))) if keys else lambda _: None
+  df = filter_jit(filter_vmap(dl, axis_size=1))
+  ds = df() if keys is None else df(kf(jnp.arange(epochs)))
 
+  steps = len(dl)
+  es, ss = f"{prefix}-{es}", f"{prefix}-{ss}"
   if es in pg.tasks:
     pg.pg.reset(pg.tasks[es], total=epochs)
   else:
     pg.add_task(es, total=epochs, res="", visible=epochs > 1)
   pg.advance(pg.tasks[es], start_epoch - 1)
   if ss in pg.tasks:
-    pg.pg.reset(pg.tasks[ss], total=ds.shape[0] * epochs, res="")
+    pg.pg.reset(pg.tasks[ss], total=steps * epochs, res="")
   else:
-    pg.add_task(ss, total=ds.shape[0] * epochs, res="")
-  pg.advance(pg.tasks[ss], (start_epoch - 1) * ds.shape[0])
+    pg.add_task(ss, total=steps * epochs, res="")
+  pg.advance(pg.tasks[ss], (start_epoch - 1) * steps)
 
-  @eqx.filter_jit
-  def _select(i: jax.Array, ii: jax.Array) -> DState[T]:
-    return tree_at(
-      lambda x: (x.epoch, x.step),
-      jax.tree.map(lambda x: x[i, ii] if isinstance(x, jax.Array) else x, ds),
-      (i + 1, i * ds.shape[0] + ii + 1),
-    )
+  @jax.jit
+  def _form(i: jax.Array, ii: jax.Array) -> tuple[jax.Array, jax.Array]:
+    return i + 1, i * steps + ii + 1
 
   with PGThread(pg.pg, pg.tasks[ss]) as pts, PGThread(pg.pg, pg.tasks[es]) as pte:
     for i in jnp.arange(start_epoch - 1, epochs):
       if epochs > 1:
         pte.completed += 1
-      for ii in jnp.arange(ds.shape[0]):
+      for ii, x, p in zip(jnp.arange(steps), ds.xs[i], ds.pad[i]):
         pts.completed += 1
-        yield _select(i, ii)
+        yield DState(x, p, *_form(i, ii), name=prefix)
+
+    pte.completed, pts.completed = _form(i, ii)
 
 
 def __test() -> None:

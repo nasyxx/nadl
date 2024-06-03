@@ -87,16 +87,19 @@ class PGThread(Thread):
 
   def run(self) -> None:
     """Run."""
+    tid = self.tid
     last_completed = 0
     wait = self.done.wait
+    advance = self.pg.advance
+    update = self.pg.update
     while not wait(0.2):
       if (completed := self.completed) != last_completed:
-        self.pg.advance(self.tid, completed - last_completed)
+        advance(self.tid, completed - last_completed)
         last_completed = completed
         if self.res is not None:
-          self.pg.update(self.tid, res=self.res)
+          update(tid, res=self.res)
           self.res = None
-    self.pg.update(self.tid, completed=self.completed, refresh=True)
+    update(self.tid, completed=self.completed, refresh=True)
 
   def __enter__(self) -> Self:
     """Enter."""
