@@ -49,6 +49,7 @@ dev = [
     "scipy>=1.13.1",
     "scikit-learn>=1.5.0",
     "ipdb>=0.13.13",
+    "naipyext[all]>=0.10.0",
 ]
 [tool.mypy]
 exclude = [
