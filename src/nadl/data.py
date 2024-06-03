@@ -129,12 +129,12 @@ def es_loop[T](
   dl: IdxDataloader,
   pg: PG,
   keys: Keys | None = None,
-  transform: Callable[[Int[Array, " a"]], T] | None = None,
   epochs: int = 1,
   start_epoch: int = 1,
   prefix: str = "L",
   es: str = "E",
   ss: str = "S",
+  transform: Callable[[Int[Array, " a"]], T] | None = None,
 ) -> Iterator[DState[T]]:
   """Simple epoch loop."""
   assert epochs > 0, "Epochs should be greater than 0."
