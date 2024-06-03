@@ -104,7 +104,6 @@ class IdxDataloader[T](eqx.Module):
     self.batch_size = batch_size
     self.transform = eqx.filter_jit(transform)
 
-  @eqx.filter_jit
   def __call__(self, key: jax.Array | None = None) -> DState[T]:
     """Get the indexes."""
     idxes = jnp.arange(self.length)
@@ -139,7 +138,7 @@ def es_loop[T](
   es, ss = f"{prefix}-{es}", f"{prefix}-{ss}"
   assert epochs > 0, "Epochs should be greater than 0."
   if keys:
-    keys.reserve(epochs)
+    keys = jax.vmap(keys.reserve(epochs))
 
   vdl = eqx.filter_jit(eqx.filter_vmap(loader, axis_size=1))
   ds: DState[T] = vdl() if keys is None else vdl(keys(jnp.arange(epochs)))
@@ -182,9 +181,9 @@ def __test() -> None:
     dl = IdxDataloader(314430, 256, drop_last=False)
 
     for i in es_loop(dl, pg, epochs=300, keys=keys, prefix="DFAT", start_epoch=10):
-      pg.update_res(
-        "DFAT-S", {"epoch": i.epoch.item(), "step": i.step.item(), "name": i.name}
-      )
+      # pg.update_res(
+      #   "DFAT-S", {"epoch": i.epoch.item(), "step": i.step.item(), "name": i.name}
+      # )
       continue
     pg.console.print(i)
     pg.console.print("Drop Last: True, Auto Pad: True")
