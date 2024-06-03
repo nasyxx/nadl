@@ -49,16 +49,17 @@ from .keys import Keys
 from .loops import PG, RESC, PGThread
 
 if TYPE_CHECKING:
+  from jaxtyping import Array, Bool, Int, Num
   from collections.abc import Iterator
 
 
 class DState(NamedTuple):
   """Dataloader state."""
 
-  xs: jax.Array
-  pad: jax.Array
-  epoch: jax.Array | None = None
-  step: jax.Array | None = None
+  xs: Num[Array, " b"]
+  pad: Bool[Array, " b"]
+  epoch: Int[Array, ""] = jnp.asarray(0)
+  step: Int[Array, ""] = jnp.asarray(0)
   name: str | None = None
 
 
