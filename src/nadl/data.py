@@ -49,14 +49,15 @@ from .keys import Keys
 from .loops import PG, RESC, PGThread
 
 if TYPE_CHECKING:
-  from jaxtyping import Array, Bool, Int, Num
-  from collections.abc import Iterator
+  from collections.abc import Callable, Iterator
+
+  from jaxtyping import Array, Bool, Int
 
 
-class DState(NamedTuple):
+class DState[T](NamedTuple):
   """Dataloader state."""
 
-  xs: Num[Array, " b"]
+  xs: T
   pad: Bool[Array, " b"]
   epoch: Int[Array, ""] = jnp.asarray(0)
   step: Int[Array, ""] = jnp.asarray(0)
@@ -100,7 +101,7 @@ class IdxDataloader(Module):
     self.batch_size = batch_size
     self.drop_num = self.length % batch_size if drop_last else 0
 
-  def __call__(self, key: jax.Array | None = None) -> DState:
+  def __call__(self, key: jax.Array | None = None) -> DState[Int[Array, " b d"]]:
     """Get the indexes."""
     idxes = jnp.arange(self.length)
     if key is not None:
@@ -124,18 +125,21 @@ class IdxDataloader(Module):
     )
 
 
-def es_loop(
+def es_loop[T](
   dl: IdxDataloader,
   pg: PG,
   keys: Keys | None = None,
+  transform: Callable[[Int[Array, " a"]], T] | None = None,
   epochs: int = 1,
   start_epoch: int = 1,
   prefix: str = "L",
   es: str = "E",
   ss: str = "S",
-) -> Iterator[DState]:
+) -> Iterator[DState[T]]:
   """Simple epoch loop."""
   assert epochs > 0, "Epochs should be greater than 0."
+  if transform:
+    transform = filter_jit(transform)
 
   kf = filter_jit(filter_vmap(keys.reserve(epochs))) if keys else lambda _: None
   df = filter_jit(filter_vmap(dl, axis_size=1))
@@ -164,7 +168,7 @@ def es_loop(
         pte.completed += 1
       for ii, x, p in zip(jnp.arange(steps), ds.xs[i], ds.pad[i]):
         pts.completed += 1
-        yield DState(x, p, *_form(i, ii), name=prefix)
+        yield DState(transform(x) if transform else x, p, *_form(i, ii), name=prefix)
 
     pte.completed, pts.completed = _form(i, ii)
 
