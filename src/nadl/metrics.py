@@ -47,6 +47,7 @@ from equinox import (
   Module,
   combine,
   filter_pure_callback,
+  is_array,
   partition,
   tree_equal,
   tree_pformat,
@@ -134,7 +135,7 @@ class Metric[**P, T](Module):
   @classmethod
   def merge(cls, *metrics: Self) -> Self:
     """Merge all metrics."""
-    _, s2 = partition(metrics, batch_array_p)
+    _, s2 = partition(metrics, is_array)
     if not tree_equal(*s2):
       raise ValueError("All metrics should have the same non-array values.")
     return filter_concat(metrics, batch_array_p)
