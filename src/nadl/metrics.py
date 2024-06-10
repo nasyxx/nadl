@@ -38,6 +38,7 @@ license  : GPL-3.0+
 
 # ruff: noqa: F722
 from functools import partial
+from warnings import warn
 
 import jax
 import jax.numpy as jnp
@@ -46,7 +47,6 @@ from equinox import (
   Module,
   combine,
   filter_pure_callback,
-  is_array,
   partition,
   tree_equal,
   tree_pformat,
@@ -55,18 +55,18 @@ from equinox import (
 from jaxtyping import Array, ArrayLike, Int, Num
 from typing import Literal, Self
 
+import numpy as np
 import sklearn.metrics as m
 
-from .utils import all_array, filter_concat
+from .utils import batch_array_p, filter_concat, filter_tree
 
-type N = Num[Array, "#a"]
+type N = Num[Array, "..."]
 
 
-def convert(x: ArrayLike | N) -> N:
+def convert(x: ArrayLike) -> N:
   """Convert to float."""
-  if isinstance(x, jax.Array):
-    return x.reshape(-1, *x.shape[1:])
-  return jnp.asarray(x).reshape(-1)
+  x = jnp.asarray(x)
+  return x.reshape(-1, *x.shape[1:])
 
 
 def roc_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> N:
@@ -106,29 +106,38 @@ def pr_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> N:
 
 
 class Metric[**P, T](Module):
-  """Base Metric."""
+  """Base Metric.
+
+  This metric is for batch data not for a single one.
+  Thus, please consider the shape of the input data as [b, ...].
+
+  The default getitem will only take the array with ndim > 1.
+  """
 
   name: AbstractVar[str | None]
 
   def __post_init__(self) -> None:
     """Post init."""
     for k, v in self.__dict__.items():
-      if isinstance(v, Array):
+      if isinstance(v, Array | np.ndarray):
         self.__dict__[k] = convert(v)
 
   def __check_init__(self) -> None:  # noqa: PLW3201
     """Check init."""
-    arrs = all_array(self)
-    if arrs and (not tree_equal(*jax.tree.map(lambda x: jnp.shape(x)[0], arrs))):
-      raise ValueError("All metrics should have the same length in first dim.")
+    arrs = filter_tree(self, batch_array_p)
+    if arrs:
+      if not tree_equal(*jax.tree.map(lambda x: jnp.shape(x)[0], arrs)):
+        raise ValueError("All batched array should have the same batch size.")
+    else:
+      warn("No batched array found in the metric.", stacklevel=1)
 
   @classmethod
   def merge(cls, *metrics: Self) -> Self:
     """Merge all metrics."""
-    _, s2 = partition(metrics, is_array)
+    _, s2 = partition(metrics, batch_array_p)
     if not tree_equal(*s2):
       raise ValueError("All metrics should have the same non-array values.")
-    return filter_concat(metrics)
+    return filter_concat(metrics, batch_array_p)
 
   def __add__(self, value: Self) -> Self:
     """Add."""
@@ -139,20 +148,20 @@ class Metric[**P, T](Module):
     return combine(self, value)
 
   @classmethod
-  def empty(cls, *args: P.args, **kwds: P.kwargs) -> Self:  # noqa: ARG003
+  def empty(cls, *_args: P.args, **_kwds: P.kwargs) -> Self:
     """Empty."""
-    return cls(dict.fromkeys(cls.__dataclass_fields__))  # type: ignore
+    return cls(**dict.fromkeys(cls.__dataclass_fields__))
 
   def compute(self) -> T:
     """Compute."""
     raise NotImplementedError
 
   def __getitem__(self, idx: int | slice | Int[ArrayLike, "..."]) -> Self:
-    """Get item."""
-    return jax.tree.map(
-      lambda x: x[idx] if is_array(x) else x,
-      self,
-    )
+    """Get item.
+
+    The default getitem will only take the array with ndim > 1.
+    """
+    return jax.tree.map(lambda x: x[idx] if batch_array_p(x) else x, self)
 
   def show(self) -> str:
     """Show."""
@@ -165,11 +174,6 @@ class Accuracy(Metric):
   labels: Int[Array, "..."]
   preds: Int[Array, "..."]
   name: str = "accuracy"
-
-  @classmethod
-  def empty(cls, name: str = "accuracy") -> Self:
-    """Empty."""
-    return cls(labels=jnp.asarray([jnp.nan]), preds=jnp.asarray([jnp.nan]), name=name)
 
   def compute(self) -> Array:
     """Compute."""

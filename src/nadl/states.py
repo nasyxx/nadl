@@ -39,24 +39,21 @@ from __future__ import annotations
 
 import shutil
 from abc import abstractmethod
+from collections.abc import Callable
 
 import equinox as eqx
 import optax
 import orbax.checkpoint as ocp
 
+from jaxtyping import PyTree
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
-  from collections.abc import Callable
   from pathlib import Path
 
   import jax
 
-  from jaxtyping import PyTree
-
   from rich.console import Console
-
-  from .metrics import Metric
 
 
 class BaseTrainState[T, M](eqx.Module):
@@ -90,6 +87,9 @@ class BaseTrainState[T, M](eqx.Module):
     )
 
 
+type T_savefn = Callable[[int, BaseTrainState, PyTree, PyTree], None]
+
+
 def state_fn(
   rpath: Path,
   console: Console | None = None,
@@ -98,10 +98,7 @@ def state_fn(
   item_names: tuple[str, ...] | None = None,
   item_handlers: dict | None = None,
   best_fn: Callable[[PyTree], float] | None = None,
-) -> tuple[
-  ocp.CheckpointManager,
-  Callable[[int, BaseTrainState, Metric | None, dict[str, float] | None], None],
-]:
+) -> tuple[ocp.CheckpointManager, T_savefn]:
   """Get states manager."""
   match (item_names, item_handlers):
     case (None, None):
@@ -133,10 +130,7 @@ def state_fn(
   )
 
   def save(
-    step: int,
-    state: BaseTrainState,
-    metadata: Metric | None = None,
-    metrics: dict[str, float] | None = None,
+    step: int, state: BaseTrainState, metadata: PyTree = None, metrics: PyTree = None
   ) -> None:
     """Save state."""
     mngr.save(

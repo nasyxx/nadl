@@ -97,6 +97,16 @@ def filter_concat[T](
   return eqx.combine(t1, t2[select_idx])
 
 
+def filter_tree(x: PyTree, cond: Callable[[jax.Array], bool]) -> list[jax.Array]:
+  """Filter tree."""
+  return jax.tree.leaves(eqx.filter(x, cond))
+
+
 def all_array(x: PyTree) -> list[jax.Array]:
   """All array."""
-  return jax.tree.leaves(eqx.filter(x, eqx.is_array))
+  return filter_tree(x, eqx.is_array)
+
+
+def batch_array_p(x: jax.Array) -> bool:
+  """Batch array."""
+  return jnp.ndim(x) > 1

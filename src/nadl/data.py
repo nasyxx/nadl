@@ -141,10 +141,6 @@ def es_loop[T](
   if transform:
     transform = filter_jit(transform)
 
-  kf = filter_jit(filter_vmap(keys.reserve(epochs))) if keys else lambda _: None
-  df = filter_jit(filter_vmap(dl, axis_size=1))
-  ds = df() if keys is None else df(kf(jnp.arange(epochs)))
-
   steps = len(dl)
   es, ss = f"{prefix}-{es}", f"{prefix}-{ss}"
   if es in pg.tasks:
@@ -157,6 +153,10 @@ def es_loop[T](
   else:
     pg.add_task(ss, total=steps * epochs, res="")
   pg.advance(pg.tasks[ss], (start_epoch - 1) * steps)
+
+  kf = filter_jit(filter_vmap(keys.reserve(epochs))) if keys else lambda _: None
+  df = filter_jit(filter_vmap(dl, axis_size=1))
+  ds = df() if keys is None else df(kf(jnp.arange(epochs)))
 
   @jax.jit
   def _form(i: jax.Array, ii: jax.Array) -> tuple[jax.Array, jax.Array]:
