@@ -56,7 +56,7 @@ from .preprocessing import (
   select_scaler,
   standard_scaler,
 )
-from .states import BaseTrainState, state_fn
+from .states import BaseTrainState, T_savefn, state_fn
 from .utils import (
   all_array,
   classit,
@@ -64,9 +64,11 @@ from .utils import (
   pformat,
   rle,
   rle_array,
+  batch_array_p,
+  filter_tree,
 )
 
-__version__ = "1.6.4"
+__version__ = "1.6.5"
 
 __all__ = [
   "PG",
@@ -80,13 +82,16 @@ __all__ = [
   "Metric",
   "Metric",
   "PGThread",
+  "T_savefn",
   "all_array",
   "average_precision_score",
+  "batch_array_p",
   "classit",
   "convert",
   "dice_coef",
   "es_loop",
   "filter_concat",
+  "filter_tree",
   "identity_scaler",
   "iou_coef",
   "min_max_scaler",
