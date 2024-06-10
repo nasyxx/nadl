@@ -68,7 +68,7 @@ from .utils import (
   filter_tree,
 )
 
-__version__ = "1.6.5"
+__version__ = "1.6.6"
 
 __all__ = [
   "PG",
