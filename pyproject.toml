@@ -18,6 +18,7 @@ dependencies = [
     "scikit-image>=0.23.2",
     "orbax-checkpoint>=0.5.15",
     "scikit-learn>=1.5.0",
+    "einops>=0.8.0",
 ]
 requires-python = ">=3.12"
 readme = {content-type = "text/plain", file="readme.org"}
@@ -50,6 +51,11 @@ dev = [
     "scikit-learn>=1.5.0",
     "ipdb>=0.13.13",
     "naipyext[all]>=0.10.0",
+    "torch>=2.3.1",
+    "tensorflow>=2.16.1",
+    "tensordict>=0.4.0",
+    "dm-tree>=0.1.8",
+    "optree>=0.11.0",
 ]
 [tool.mypy]
 exclude = [
