@@ -38,7 +38,7 @@ license  : GPL-3.0+
 
 # ruff: noqa: F722
 from functools import partial
-from warnings import warn
+from warnings import catch_warnings, simplefilter, warn
 
 import jax
 import jax.numpy as jnp
@@ -150,7 +150,9 @@ class Metric[**P, T](Module):
   @classmethod
   def empty(cls, *_args: P.args, **_kwds: P.kwargs) -> Self:
     """Empty."""
-    return cls(**dict.fromkeys(cls.__dataclass_fields__))
+    with catch_warnings():
+      simplefilter("ignore")
+      return cls(**dict.fromkeys(cls.__dataclass_fields__))
 
   def compute(self) -> T:
     """Compute."""
