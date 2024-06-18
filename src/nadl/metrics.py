@@ -52,25 +52,24 @@ from equinox import (
   tree_equal,
   tree_pformat,
 )
+from optax import softmax_cross_entropy
 
-from jaxtyping import Array, ArrayLike, Int, Num
-from typing import Literal, Self
+from jaxtyping import Array, ArrayLike, Float, Int, Num, Scalar
+from typing import Literal, Self, cast
 
 import numpy as np
 import sklearn.metrics as m
 
 from .utils import batch_array_p, filter_concat, filter_tree
 
-type N = Num[Array, "..."]
 
-
-def convert(x: ArrayLike) -> N:
+def convert(x: Num[ArrayLike, "..."]) -> Num[Array, "B ..."]:
   """Convert to float."""
   x = jnp.asarray(x)
   return x.reshape(-1, *x.shape[1:])
 
 
-def roc_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> N:
+def roc_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> Scalar:
   """Compute ROC."""
   return jax.pure_callback(
     m.roc_auc_score, jax.ShapeDtypeStruct((), jnp.float32), labels, preds
@@ -81,7 +80,7 @@ def average_precision_score(
   labels: Num[Array, " A"],
   preds: Num[Array, " A"],
   average: Literal["micro", "macro"] = "macro",
-) -> N:
+) -> Scalar:
   """Compute PR."""
   return jax.pure_callback(
     partial(m.average_precision_score, average=average),
@@ -91,10 +90,10 @@ def average_precision_score(
   )
 
 
-def pr_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> N:
+def pr_auc_score(labels: Num[Array, " A"], preds: Num[Array, " A"]) -> Scalar:
   """Compute PR."""
 
-  def _callback(lbl: Num[Array, " A"], prd: Num[Array, " A"]) -> N:
+  def _callback(lbl: Num[Array, " A"], prd: Num[Array, " A"]) -> Scalar:
     precision, recall, _ = m.precision_recall_curve(lbl, prd)
     return jnp.asarray(m.auc(recall, precision))
 
@@ -183,7 +182,9 @@ class Accuracy(Metric):
     return jnp.nanmean(self.labels == self.preds, axis=-1)
 
 
-def dice_coef(y_true: jax.Array, y_pred: jax.Array, eps: float = 1e-8) -> jax.Array:
+def dice_coef(
+  y_true: Int[Array, " A"], y_pred: Int[Array, " A"], eps: float = 1e-8
+) -> Scalar:
   """Compute dice coefficient."""
   y_true = jnp.asarray(y_true)
   y_pred = jnp.asarray(y_pred)
@@ -194,7 +195,9 @@ def dice_coef(y_true: jax.Array, y_pred: jax.Array, eps: float = 1e-8) -> jax.Ar
   return (2.0 * intersection) / (union + eps)
 
 
-def iou_coef(y_true: jax.Array, y_pred: jax.Array, eps: float = 1e-8) -> jax.Array:
+def iou_coef(
+  y_true: Int[Array, " A"], y_pred: Int[Array, " A"], eps: float = 1e-8
+) -> Scalar:
   """Compute intersection over union."""
   y_true = jnp.asarray(y_true)
   y_pred = jnp.asarray(y_pred)
@@ -203,3 +206,18 @@ def iou_coef(y_true: jax.Array, y_pred: jax.Array, eps: float = 1e-8) -> jax.Arr
   union = jnp.sum(y_true) + jnp.sum(y_pred) - intersection
 
   return intersection / (union + eps)
+
+
+def info_nce(
+  pos: Float[Array, "B D"], neg: Float[Array, "B D"], t: float = 0.07
+) -> Float[Array, "B 1"]:
+  """Compute info nce loss for paired pos-neg data."""
+  pos /= jax.nn.normalize(pos, axis=-1, keepdims=True)
+  neg /= jax.nn.normalize(neg, axis=-1, keepdims=True)
+
+  pos_sim = jnp.einsum("bi,bi->b", pos, pos) / t
+  neg_sim = jnp.einsum("bi,nd->bn", pos, neg) / t
+  logits = jnp.c_[pos_sim, neg_sim]
+  return cast(
+    Float[Array, "B 1"], softmax_cross_entropy(logits, jnp.arange(logits.shape[0]))
+  )
