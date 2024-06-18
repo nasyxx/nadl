@@ -35,6 +35,7 @@ license  : GPL-3.0+
 NADL
 """
 
+from .blocks import FastKANLayer, RadialBasisFunction, SplineLinear
 from .data import DState, IdxDataloader, es_loop
 from .keys import Keys, new_key
 from .loops import PG, RESC, PGThread
@@ -44,10 +45,12 @@ from .metrics import (
   average_precision_score,
   convert,
   dice_coef,
+  info_nce,
   iou_coef,
   pr_auc_score,
   roc_auc_score,
 )
+from .nets import FastKAN, pMTnet
 from .preprocessing import (
   SCALER,
   identity_scaler,
@@ -59,16 +62,16 @@ from .preprocessing import (
 from .states import BaseTrainState, T_savefn, state_fn
 from .utils import (
   all_array,
+  batch_array_p,
   classit,
   filter_concat,
+  filter_tree,
   pformat,
   rle,
   rle_array,
-  batch_array_p,
-  filter_tree,
 )
 
-__version__ = "1.6.7"
+__version__ = "1.7.0"
 
 __all__ = [
   "PG",
@@ -77,11 +80,15 @@ __all__ = [
   "Accuracy",
   "BaseTrainState",
   "DState",
+  "FastKAN",
+  "FastKANLayer",
   "IdxDataloader",
   "Keys",
   "Metric",
   "Metric",
   "PGThread",
+  "RadialBasisFunction",
+  "SplineLinear",
   "T_savefn",
   "all_array",
   "average_precision_score",
@@ -93,10 +100,12 @@ __all__ = [
   "filter_concat",
   "filter_tree",
   "identity_scaler",
+  "info_nce",
   "iou_coef",
   "min_max_scaler",
   "new_key",
   "normalizer",
+  "pMTnet",
   "pformat",
   "pr_auc_score",
   "rle",
