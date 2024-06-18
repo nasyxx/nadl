@@ -35,99 +35,99 @@ license  : GPL-3.0+
 Pre define networks.
 """
 
-from .blocks import DownSample, UpSample, ConvBlock, ResNetBasic, ResNetBottleneck
+from collections.abc import Callable
 
-from flax import linen
+import equinox as eqx
 import jax
 
+from jaxtyping import Array, Float, PRNGKeyArray
 
-class UNet(linen.Module):
-  """UNet model for image segmentation."""
-
-  out_channels: int
-  num_features: int = 4
-  init_features: int = 64
-  kernel_size: int = 3
-  use_depthwise: bool = False
-
-  @linen.compact
-  def __call__(self, x: jax.Array, train: bool = False) -> jax.Array:
-    """Build the UNet model."""
-    list_features = list(
-      map(lambda n: self.init_features * (2**n), range(self.num_features))
-    )
-    skips = [
-      x := DownSample(
-        features=features,
-        kernel_size=self.kernel_size,
-        use_depthwise=self.use_depthwise,
-        pool="before" if features > self.init_features else None,
-      )(x, train=train)
-      for features in list_features
-    ]
-
-    # Bottleneck
-    x = ConvBlock(
-      features=list_features[-1] * 2,
-      kernel_size=self.kernel_size,
-      use_depthwise=self.use_depthwise,
-    )(
-      linen.max_pool(x, window_shape=(2, 2), strides=(2, 2), padding="VALID"),
-      train=train,
-    )
-
-    # Upsample path
-    for features in reversed(list_features):
-      skip = skips.pop()
-      x = UpSample(
-        features=features,
-        kernel_size=self.kernel_size,
-        use_depthwise=self.use_depthwise,
-      )(x, skip, train=train)
-
-    # Final layer
-    return linen.Conv(features=self.out_channels, kernel_size=(1, 1))(x)
+from .blocks import FastKANLayer
 
 
-def resent18(out_channels: int, init_features: int = 64) -> ResNetBasic:
-  """ResNet18."""
-  return ResNetBasic(
-    out_channels=out_channels, init_features=init_features, name="ResNet18"
-  )
+class pMTnet(eqx.Module):  # noqa: N801
+  """pMTnet.
+
+  https://github.com/tianshilu/pMTnet
+
+  Deep learning neural network prediction tcr binding specificity to
+  peptide and HLA based on peptide sequences. Please refer to our
+  paper for more details: 'Deep learning-based prediction of T cell
+  receptor-antigen binding specificity.
+
+  (https://www.nature.com/articles/s42256-021-00383-2)
+
+  Lu, T., Zhang, Z., Zhu, J. et al. 2021.
+  """
+
+  layers: eqx.nn.Sequential
+
+  def __init__(
+    self,
+    inp: int,
+    out: int = 1,
+    hiddens: tuple[int, int, int] = (300, 200, 100),
+    dropout_rate: float = 0.2,
+    *,
+    key: PRNGKeyArray,
+  ) -> None:
+    """Initialize the pMTnet."""
+    k1, k2, k3, k4 = jax.random.split(key, 4)
+    self.layers = eqx.nn.Sequential([
+      eqx.nn.Linear(inp, hiddens[0], key=k1),
+      eqx.nn.Dropout(p=dropout_rate),
+      eqx.nn.Lambda(jax.nn.relu),
+      eqx.nn.Linear(hiddens[0], hiddens[1], key=k2),
+      eqx.nn.Lambda(jax.nn.relu),
+      eqx.nn.Linear(hiddens[1], hiddens[2], key=k3),
+      eqx.nn.Lambda(jax.nn.relu),
+      eqx.nn.Linear(hiddens[2], out, key=k4),
+    ])
+
+  def __call__(self, x: Float[Array, " A"]) -> Float[Array, " A"]:
+    """Forward."""
+    return self.layers(x)
 
 
-def resnet34(out_channels: int, init_features: int = 64) -> ResNetBasic:
-  """ResNet34."""
-  return ResNetBasic(
-    out_channels=out_channels,
-    init_features=init_features,
-    num_blocks=(3, 4, 6, 3),
-    name="ResNet34",
-  )
+class FastKAN(eqx.Module):
+  """FastKAN.
 
+  FastKAN: Very Fast Implementation (Approximation) of Kolmogorov-Arnold Network.
+  """
 
-def resnet50(out_channels: int, init_features: int = 64) -> ResNetBottleneck:
-  """ResNet50."""
-  return ResNetBottleneck(
-    out_channels=out_channels, init_features=init_features, name="ResNet50"
-  )
+  layers: eqx.nn.Sequential
 
+  def __init__(
+    self,
+    layers_hidden: list[int],
+    grid_min: float = -2.0,
+    grid_max: float = 2.0,
+    num_grids: int = 8,
+    use_base_update: bool = True,
+    base_activation: Callable[[Float[Array, "..."]], Float[Array, "..."]] = jax.nn.silu,
+    spline_weight_init_scale: float = 0.1,
+    *,
+    key: PRNGKeyArray,
+  ) -> None:
+    """Initialize the FastKAN."""
+    ks = jax.random.split(key, len(layers_hidden) - 1)
+    self.layers = eqx.nn.Sequential([
+      FastKANLayer(
+        in_dim,
+        out_dim,
+        grid_min=grid_min,
+        grid_max=grid_max,
+        num_grids=num_grids,
+        use_base_update=use_base_update,
+        base_activation=base_activation,
+        spline_weight_init_scale=spline_weight_init_scale,
+        key=k,
+      )
+      for in_dim, out_dim, k in zip(
+        layers_hidden[:-1], layers_hidden[1:], ks, strict=True
+      )
+    ])
 
-def resnet101(out_channels: int, init_features: int = 64) -> ResNetBottleneck:
-  """ResNet101."""
-  return ResNetBottleneck(
-    out_channels=out_channels,
-    init_features=init_features,
-    num_blocks=(3, 4, 23, 3),
-    name="ResNet101",
-  )
-
-
-def reset152(out_channels: int, init_features: int = 64) -> ResNetBottleneck:
-  """ResNet152."""
-  return ResNetBottleneck(
-    out_channels=out_channels,
-    init_features=init_features,
-    num_blocks=(3, 8, 36, 3),
-    name="ResNet152",
-  )
+  def __call__(self, x: Float[Array, " A"]) -> Float[Array, " A"]:
+    """Forward."""
+    return self.layers(x)
