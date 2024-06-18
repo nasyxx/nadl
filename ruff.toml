@@ -29,7 +29,7 @@ unfixable = [
   "F841",  # unused variables
   "C417"   # map
 ]
-typing-modules = ["beartype.typing"]
+typing-modules = ["beartype.typing", "nadl.typings", ".typings"]
 
 [lint.isort]
 section-order = [

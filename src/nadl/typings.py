@@ -34,14 +34,3 @@ license  : GPL-3.0+
 
 Typings for NADL.
 """
-
-from jaxtyping import Array, Float, Int, Key, Num, PRNGKeyArray
-
-type F = Float[Array, "..."]
-type FB = Float[Array, "B ..."]
-type Ia = Int[Array, "..."]
-type IaB = Int[Array, "B ..."]
-type K = Key[PRNGKeyArray, "..."]
-type KB = Key[PRNGKeyArray, "B ..."]
-type N = Num[Array, "..."]
-type NB = Num[Array, "B ..."]
