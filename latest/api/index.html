@@ -6123,7 +6123,8 @@ receptor-antigen binding specificity.</p>
 <span class="normal">220</span>
 <span class="normal">221</span>
 <span class="normal">222</span>
-<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">info_nce</span><span class="p">(</span>
+<span class="normal">223</span>
+<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">info_nce</span><span class="p">(</span>
   <span class="n">pos</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;B D&quot;</span><span class="p">],</span> <span class="n">neg</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;B D&quot;</span><span class="p">],</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.07</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;B 1&quot;</span><span class="p">]:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Compute info nce loss for paired pos-neg data.&quot;&quot;&quot;</span>
@@ -6134,7 +6135,8 @@ receptor-antigen binding specificity.</p>
   <span class="n">neg_sim</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;bi,nd-&gt;bn&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">neg</span><span class="p">)</span> <span class="o">/</span> <span class="n">t</span>
   <span class="n">logits</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">pos_sim</span><span class="p">,</span> <span class="n">neg_sim</span><span class="p">]</span>
   <span class="k">return</span> <span class="n">cast</span><span class="p">(</span>
-    <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;B 1&quot;</span><span class="p">],</span> <span class="n">softmax_cross_entropy</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;B 1&quot;</span><span class="p">],</span>
+    <span class="n">softmax_cross_entropy_with_integer_labels</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
   <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
