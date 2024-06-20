@@ -52,7 +52,7 @@ from equinox import (
   tree_equal,
   tree_pformat,
 )
-from optax import softmax_cross_entropy
+from optax import softmax_cross_entropy_with_integer_labels
 
 from jaxtyping import Array, ArrayLike, Float, Int, Num, Scalar
 from typing import Literal, Self, cast
@@ -219,5 +219,18 @@ def info_nce(
   neg_sim = jnp.einsum("bi,nd->bn", pos, neg) / t
   logits = jnp.c_[pos_sim, neg_sim]
   return cast(
-    Float[Array, "B 1"], softmax_cross_entropy(logits, jnp.arange(logits.shape[0]))
+    Float[Array, "B 1"],
+    softmax_cross_entropy_with_integer_labels(logits, jnp.arange(logits.shape[0])),
   )
+
+
+def _test() -> None:
+  """Test."""
+  k1, k2 = jax.random.split(jax.random.key(42))
+  p = jax.random.normal(k1, (4, 30))
+  n = jax.random.normal(k2, (4, 30))
+  assert info_nce(p, n).shape == (4,)
+
+
+if __name__ == "__main__":
+  _test()
