@@ -212,8 +212,8 @@ def info_nce(
   pos: Float[Array, "B D"], neg: Float[Array, "B D"], t: float = 0.07
 ) -> Float[Array, "B 1"]:
   """Compute info nce loss for paired pos-neg data."""
-  pos /= jax.nn.normalize(pos, axis=-1, keepdims=True)
-  neg /= jax.nn.normalize(neg, axis=-1, keepdims=True)
+  pos /= jnp.linalg.norm(pos, axis=-1, keepdims=True)
+  neg /= jnp.linalg.norm(neg, axis=-1, keepdims=True)
 
   pos_sim = jnp.einsum("bi,bi->b", pos, pos) / t
   neg_sim = jnp.einsum("bi,nd->bn", pos, neg) / t
