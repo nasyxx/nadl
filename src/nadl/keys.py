@@ -41,12 +41,9 @@ import jax
 import jax.numpy as jnp
 from equinox import Module, tree_at
 
-from jaxtyping import ArrayLike, Int, PRNGKeyArray
+from jaxtyping import ArrayLike, Int, PRNGKeyArray, ScalarLike
 
 # ruff: noqa: F722
-
-
-type IL = Int[ArrayLike, ""]
 
 
 class Keys(Module):
@@ -59,7 +56,7 @@ class Keys(Module):
 
   init_key: PRNGKeyArray
   keys: PRNGKeyArray
-  idx: IL = 0
+  idx: ScalarLike = 0
 
   def __call__(self, epoch: ArrayLike) -> jax.Array:
     """Get keys for epoch."""
@@ -85,7 +82,7 @@ class Keys(Module):
     return self(self.idx + 1)
 
   @property
-  def state(self) -> tuple[PRNGKeyArray, PRNGKeyArray, IL]:
+  def state(self) -> tuple[PRNGKeyArray, PRNGKeyArray, ScalarLike]:
     """Get state."""
     return self.init_key, self.keys, self.idx
 
@@ -98,7 +95,7 @@ class Keys(Module):
 
   @classmethod
   def from_state(
-    cls: type[Keys], key: PRNGKeyArray, keys: PRNGKeyArray, idx: IL
+    cls: type[Keys], key: PRNGKeyArray, keys: PRNGKeyArray, idx: ScalarLike
   ) -> Keys:
     """Convert state to Keys."""
     return cls(key, keys, idx)
