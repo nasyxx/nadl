@@ -46,7 +46,7 @@ import optax
 import orbax.checkpoint as ocp
 
 from jaxtyping import PyTree
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Self
 
 if TYPE_CHECKING:
   from pathlib import Path
@@ -68,10 +68,8 @@ class BaseTrainState[T, M](eqx.Module):
 
   @classmethod
   @abstractmethod
-  def create[**P](
-    cls: type[BaseTrainState[T, M]], *args: P.args, **kwds: P.kwargs
-  ) -> BaseTrainState[T, M]:
-    """Create state."""
+  def init[**P](cls: type[Self], *args: P.args, **kwds: P.kwargs) -> Self:
+    """Create initial state."""
     raise NotImplementedError
 
   def apply_grads(self, loss: jax.Array, grads: eqx.Module) -> BaseTrainState[T, M]:
