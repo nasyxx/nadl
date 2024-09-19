@@ -98,8 +98,15 @@ strict = true
 warn_unused_configs = true
 mypy_path = "./typings"
 
-[tool.pyright]
+[tool.basedpyright]
 pythonVersion = "3.12"
+typeCheckingMode = "standard"
+
+reportMissingTypeStubs = false
+reportUnknownVariableType = false
+reportUnusedImport = false  # use ruff
+reportUnknownMemberType = false
+
 extraPaths = [
     "__pypackages__/3.12/lib",
     "src",
