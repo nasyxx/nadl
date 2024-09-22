@@ -46,7 +46,7 @@ type F = Float[Array, " *"]
 type K = PRNGKeyArray
 
 
-def init_fn(fn: Callable[[K, tuple[int, ...]]]) -> Callable[[F, K], F]:
+def init_fn(fn: Callable[[K, tuple[int, ...]], F]) -> Callable[[F, K], F]:
   """Initialize function."""
 
   def _init_fn(weight: F, key: K) -> F:
