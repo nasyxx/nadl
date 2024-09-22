@@ -43,6 +43,18 @@ import jax
 from jaxtyping import Array, Float, PRNGKeyArray
 
 from .blocks import FastKANLayer
+from .resnet import (
+  resnet18,
+  resnet34,
+  resnet50,
+  resnet101,
+  resnet152,
+  resnext50_32x4d,
+  resnext101_32x8d,
+  resnext101_64x4d,
+  wide_resnet50_2,
+  wide_resnet101_2,
+)
 
 
 class pMTnet(eqx.Module):  # noqa: N801
@@ -131,3 +143,20 @@ class FastKAN(eqx.Module):
   def __call__(self, x: Float[Array, " A"]) -> Float[Array, " A"]:
     """Forward."""
     return self.layers(x)
+
+
+__all__ = [
+  "FastKAN",
+  "FastKANLayer",
+  "pMTnet",
+  "resnet18",
+  "resnet34",
+  "resnet50",
+  "resnet101",
+  "resnet152",
+  "resnext50_32x4d",
+  "resnext101_32x8d",
+  "resnext101_64x4d",
+  "wide_resnet50_2",
+  "wide_resnet101_2",
+]

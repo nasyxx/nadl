@@ -50,7 +50,20 @@ from .metrics import (
   pr_auc_score,
   roc_auc_score,
 )
-from .nets import FastKAN, pMTnet
+from .nets import (
+  FastKAN,
+  pMTnet,
+  resnet18,
+  resnet34,
+  resnet50,
+  resnet101,
+  resnet152,
+  resnext50_32x4d,
+  resnext101_32x8d,
+  resnext101_64x4d,
+  wide_resnet50_2,
+  wide_resnet101_2,
+)
 from .preprocessing import (
   SCALER,
   identity_scaler,
@@ -72,7 +85,7 @@ from .utils import (
 )
 from .surgery import init_fn, kaiming_init, is_linear, get_weight, init_surgery
 
-__version__ = "1.9.4"
+__version__ = "1.10.0"
 
 __all__ = [
   "PG",
@@ -114,10 +127,20 @@ __all__ = [
   "pMTnet",
   "pformat",
   "pr_auc_score",
+  "resnet18",
+  "resnet34",
+  "resnet50",
+  "resnet101",
+  "resnet152",
+  "resnext50_32x4d",
+  "resnext101_32x8d",
+  "resnext101_64x4d",
   "rle",
   "rle_array",
   "roc_auc_score",
   "select_scaler",
   "standard_scaler",
   "state_fn",
+  "wide_resnet50_2",
+  "wide_resnet101_2",
 ]
