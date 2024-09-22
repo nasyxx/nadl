@@ -70,8 +70,9 @@ from .utils import (
   rle,
   rle_array,
 )
+from surgery import init_fn, kaiming_init, is_linear, get_weight, init_surgery
 
-__version__ = "1.9.0"
+__version__ = "1.9.2"
 
 __all__ = [
   "PG",
@@ -99,9 +100,14 @@ __all__ = [
   "es_loop",
   "filter_concat",
   "filter_tree",
+  "get_weight",
   "identity_scaler",
   "info_nce",
+  "init_fn",
+  "init_surgery",
   "iou_coef",
+  "is_linear",
+  "kaiming_init",
   "min_max_scaler",
   "new_key",
   "normalizer",

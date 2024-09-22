@@ -35,11 +35,15 @@ license  : GPL-3.0+
 Surgery for NADL.
 """
 
-from typing import Any, Callable, TypeGuard
+import equinox as eqx
 import jax
 import jax.numpy as jnp
-import equinox as eqx
-from .typings import F, K
+
+from jaxtyping import Array, Float, PRNGKeyArray
+from typing import Any, Callable, TypeGuard
+
+type F = Float[Array, " *"]
+type K = PRNGKeyArray
 
 
 def init_fn(fn: Callable[[K, tuple[int, ...]]]) -> Callable[[F, K], F]:
@@ -61,19 +65,25 @@ def is_linear(x: Any) -> TypeGuard[eqx.nn.Linear]:  # noqa: ANN401
   return isinstance(x, eqx.nn.Linear)
 
 
+def get_weight(x: Any) -> Any:  # noqa: ANN401
+  """Get weight of a module."""
+  return x.weight
+
+
 def init_surgery[T, M](
   model: T,
   key: K,
   is_leaf: Callable[[M], bool] = is_linear,
   init: Callable[[F, K], F] = kaiming_init,
+  get_weight: Callable = get_weight,
 ) -> T:
   """Initialize model."""
 
   def _get_weights(m: Any) -> list[F]:  # noqa: ANN401
     return list(
       map(
-        lambda x: x.weight,
-        filter(is_leaf, jax.tree_util.tree_leaves(m, is_leaf=is_leaf)),
+        get_weight,
+        filter(is_leaf, jax.tree.leaves(m, is_leaf=is_leaf)),
       )
     )
 
