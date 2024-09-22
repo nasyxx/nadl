@@ -70,9 +70,9 @@ from .utils import (
   rle,
   rle_array,
 )
-from surgery import init_fn, kaiming_init, is_linear, get_weight, init_surgery
+from .surgery import init_fn, kaiming_init, is_linear, get_weight, init_surgery
 
-__version__ = "1.9.2"
+__version__ = "1.9.3"
 
 __all__ = [
   "PG",
