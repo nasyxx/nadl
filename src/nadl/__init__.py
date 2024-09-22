@@ -72,7 +72,7 @@ from .utils import (
 )
 from .surgery import init_fn, kaiming_init, is_linear, get_weight, init_surgery
 
-__version__ = "1.9.3"
+__version__ = "1.9.4"
 
 __all__ = [
   "PG",
