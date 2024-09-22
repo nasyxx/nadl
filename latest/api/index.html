@@ -986,6 +986,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nadl.get_weight" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_weight
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nadl.identity_scaler" class="md-nav__link">
     <span class="md-ellipsis">
       identity_scaler
@@ -1004,9 +1013,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nadl.init_fn" class="md-nav__link">
+    <span class="md-ellipsis">
+      init_fn
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.init_surgery" class="md-nav__link">
+    <span class="md-ellipsis">
+      init_surgery
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nadl.iou_coef" class="md-nav__link">
     <span class="md-ellipsis">
       iou_coef
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.is_linear" class="md-nav__link">
+    <span class="md-ellipsis">
+      is_linear
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.kaiming_init" class="md-nav__link">
+    <span class="md-ellipsis">
+      kaiming_init
     </span>
   </a>
   
@@ -1864,6 +1909,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nadl.get_weight" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_weight
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nadl.identity_scaler" class="md-nav__link">
     <span class="md-ellipsis">
       identity_scaler
@@ -1882,9 +1936,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nadl.init_fn" class="md-nav__link">
+    <span class="md-ellipsis">
+      init_fn
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.init_surgery" class="md-nav__link">
+    <span class="md-ellipsis">
+      init_surgery
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nadl.iou_coef" class="md-nav__link">
     <span class="md-ellipsis">
       iou_coef
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.is_linear" class="md-nav__link">
+    <span class="md-ellipsis">
+      is_linear
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nadl.kaiming_init" class="md-nav__link">
+    <span class="md-ellipsis">
+      kaiming_init
     </span>
   </a>
   
@@ -6053,6 +6143,32 @@ receptor-antigen binding specificity.</p>
 <div class="doc doc-object doc-function">
 
 
+<h2 id="nadl.get_weight" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_weight</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Get weight of a module.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>nadl/surgery.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_weight</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>  <span class="c1"># noqa: ANN401</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Get weight of a module.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">weight</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="nadl.identity_scaler" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">identity_scaler</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
 
@@ -6139,6 +6255,100 @@ receptor-antigen binding specificity.</p>
 <div class="doc doc-object doc-function">
 
 
+<h2 id="nadl.init_fn" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">init_fn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initialize function.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>nadl/surgery.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">init_fn</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">K</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">F</span><span class="p">,</span> <span class="n">K</span><span class="p">],</span> <span class="n">F</span><span class="p">]:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Initialize function.&quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">_init_fn</span><span class="p">(</span><span class="n">weight</span><span class="p">:</span> <span class="n">F</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">K</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">F</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">weight</span><span class="p">))</span>
+
+  <span class="k">return</span> <span class="n">_init_fn</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="nadl.init_surgery" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">init_surgery</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_linear</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">kaiming_init</span><span class="p">,</span> <span class="n">get_weight</span><span class="o">=</span><span class="n">get_weight</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initialize model.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>nadl/surgery.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">init_surgery</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">](</span>
+  <span class="n">model</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span>
+  <span class="n">is_leaf</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">M</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_linear</span><span class="p">,</span>
+  <span class="n">init</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">F</span><span class="p">,</span> <span class="n">K</span><span class="p">],</span> <span class="n">F</span><span class="p">]</span> <span class="o">=</span> <span class="n">kaiming_init</span><span class="p">,</span>
+  <span class="n">get_weight</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">get_weight</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Initialize model.&quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">_get_weights</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">F</span><span class="p">]:</span>  <span class="c1"># noqa: ANN401</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span>
+      <span class="nb">map</span><span class="p">(</span>
+        <span class="n">get_weight</span><span class="p">,</span>
+        <span class="nb">filter</span><span class="p">(</span><span class="n">is_leaf</span><span class="p">,</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_leaf</span><span class="p">)),</span>
+      <span class="p">)</span>
+    <span class="p">)</span>
+
+  <span class="n">weights</span> <span class="o">=</span> <span class="n">_get_weights</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+  <span class="n">new_weights</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))))</span>
+  <span class="k">return</span> <span class="n">eqx</span><span class="o">.</span><span class="n">tree_at</span><span class="p">(</span><span class="n">_get_weights</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">new_weights</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="nadl.iou_coef" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">iou_coef</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-08</span><span class="p">)</span></code>
 
@@ -6172,6 +6382,58 @@ receptor-antigen binding specificity.</p>
   <span class="n">union</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span> <span class="o">+</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span> <span class="o">-</span> <span class="n">intersection</span>
 
   <span class="k">return</span> <span class="n">intersection</span> <span class="o">/</span> <span class="p">(</span><span class="n">union</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="nadl.is_linear" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">is_linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Check if a module is a linear layer.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>nadl/surgery.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">is_linear</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeGuard</span><span class="p">[</span><span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">]:</span>  <span class="c1"># noqa: ANN401</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Check if a module is a linear layer.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="nadl.kaiming_init" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">kaiming_init</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Kaiming initialization.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>nadl/surgery.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">kaiming_init</span><span class="p">(</span><span class="n">weight</span><span class="p">:</span> <span class="n">F</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">K</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">F</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Kaiming initialization.&quot;&quot;&quot;</span>
+  <span class="k">return</span> <span class="n">init_fn</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">he_normal</span><span class="p">())(</span><span class="n">weight</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
