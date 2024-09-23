@@ -40,7 +40,7 @@ from collections.abc import Callable
 import jax
 from equinox import Module, field
 from equinox.nn import (
-  AvgPool2d,
+  AdaptiveAvgPool2d,
   BatchNorm,
   Conv2d,
   GroupNorm,
@@ -53,7 +53,7 @@ from equinox.nn import (
 from jaxtyping import Array, PRNGKeyArray, PyTree
 from typing import Protocol, Self
 
-from nadl import init_fn, init_surgery
+from .surgery import init_fn, init_surgery
 
 
 def conv3x3(
@@ -162,8 +162,11 @@ class BasicBlock(Module):
 
     return cls(conv1, bn1, conv2, bn2, downsample, stride, activation, expansion)
 
-  def __call__(self, x: Array, state: State) -> tuple[Array, State]:
+  def __call__(
+    self, x: Array, state: State, *, key: PRNGKeyArray | None = None
+  ) -> tuple[Array, State]:
     """Forward."""
+    del key
     identity = x
 
     out = self.conv1(x)
@@ -174,7 +177,7 @@ class BasicBlock(Module):
     out, state = self.bn2(out, state)
 
     if self.downsample is not None:
-      identity = self.downsample(x)
+      identity, state = self.downsample(x, state)
 
     out += identity
     out = self.activation(out)
@@ -230,8 +233,11 @@ class Bottleneck(Module):
       conv1, bn1, conv2, bn2, conv3, bn3, downsample, stride, activation, expansion
     )
 
-  def __call__(self, x: Array, state: State) -> tuple[Array, State]:
+  def __call__(
+    self, x: Array, state: State, *, key: PRNGKeyArray | None = None
+  ) -> tuple[Array, State]:
     """Forward."""
+    del key
     identity = x
 
     out = self.conv1(x)
@@ -253,17 +259,44 @@ class Bottleneck(Module):
     return out, state
 
 
+class StateSeq(Module):
+  """Stateful sequential layers."""
+
+  layers: list
+
+  def __call__(
+    self, x: Array, state: State, *, key: PRNGKeyArray | None = None
+  ) -> tuple[Array, State]:
+    """Forward."""
+    ks = (
+      jax.random.split(key, len(self.layers))
+      if key is not None
+      else (None,) * len(self.layers)
+    )
+    for layer, k in zip(self.layers, ks):
+      x, state = layer(x, state, key=k)
+    return x, state
+
+  def __len__(self) -> int:
+    """Length."""
+    return len(self.layers)
+
+  def __iter__(self):  # noqa: ANN204
+    """Iter."""
+    yield from self.layers
+
+
 class ResNet(Module):
   """ResNet."""
 
   conv1: Conv2d
   bn1: BatchNorm | Callable
   maxpool: MaxPool2d
-  layer1: Sequential
-  layer2: Sequential
-  layer3: Sequential
-  layer4: Sequential
-  avepool: AvgPool2d
+  layer1: StateSeq
+  layer2: StateSeq
+  layer3: StateSeq
+  layer4: StateSeq
+  avepool: AdaptiveAvgPool2d
   fc: Callable[..., Array]
   activation: Callable[[Array], Array]
 
@@ -273,6 +306,10 @@ class ResNet(Module):
   dilation: int = field(static=True)
   groups: int = field(static=True)
   base_width: int = field(static=True)
+
+  def is_stateful(self) -> bool:  # noqa: PLR6301
+    """Check if stateful."""
+    return True
 
   @classmethod
   def init(  # noqa: PLR0914
@@ -313,7 +350,7 @@ class ResNet(Module):
       dilation: int = dilation,
       *,
       key: PRNGKeyArray,
-    ) -> tuple[Sequential, int, int]:
+    ) -> tuple[StateSeq, int, int]:
       """Make layer."""
       k1, k2, *ks = jax.random.split(key, 1 + blocks)
       downsample = None
@@ -357,7 +394,7 @@ class ResNet(Module):
           ks,
         )
       )
-      return Sequential(layers), inplanes, dilation
+      return StateSeq(layers), inplanes, dilation
 
     conv1 = Conv2d(
       3, inplanes, kernel_size=7, stride=2, padding=3, use_bias=False, key=k1
@@ -397,7 +434,7 @@ class ResNet(Module):
       dilation=dilation,
       key=k5,
     )
-    avepool = AvgPool2d((1, 1))
+    avepool = AdaptiveAvgPool2d((1, 1))
     fc = Linear(512 * block.expansion, num_classes, key=k5)
 
     model = cls(
