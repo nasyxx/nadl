@@ -2656,8 +2656,7 @@ license  : GPL-3.0+</p>
 
               <details class="quote">
                 <summary>Source code in <code>nadl/nets.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
-<span class="normal">105</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
 <span class="normal">108</span>
@@ -2697,7 +2696,8 @@ license  : GPL-3.0+</p>
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
-<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">FastKAN</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="normal">145</span>
+<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">FastKAN</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;FastKAN.</span>
 
 <span class="sd">  FastKAN: Very Fast Implementation (Approximation) of Kolmogorov-Arnold Network.</span>
@@ -2769,9 +2769,9 @@ license  : GPL-3.0+</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/nets.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; A&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; A&quot;</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; A&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; A&quot;</span><span class="p">]:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Forward.&quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -2795,8 +2795,7 @@ license  : GPL-3.0+</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/nets.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
-<span class="normal">113</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
@@ -2824,7 +2823,8 @@ license  : GPL-3.0+</p>
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">141</span>
+<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
   <span class="bp">self</span><span class="p">,</span>
   <span class="n">layers_hidden</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
   <span class="n">grid_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span>
@@ -5731,8 +5731,7 @@ receptor-antigen binding specificity.</p>
 
               <details class="quote">
                 <summary>Source code in <code>nadl/nets.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 60</span>
-<span class="normal"> 61</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 61</span>
 <span class="normal"> 62</span>
 <span class="normal"> 63</span>
 <span class="normal"> 64</span>
@@ -5772,7 +5771,8 @@ receptor-antigen binding specificity.</p>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
-<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">pMTnet</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>  <span class="c1"># noqa: N801</span>
+<span class="normal">101</span>
+<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">pMTnet</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>  <span class="c1"># noqa: N801</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;pMTnet.</span>
 
 <span class="sd">  https://github.com/tianshilu/pMTnet</span>
@@ -5844,9 +5844,9 @@ receptor-antigen binding specificity.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/nets.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; A&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; A&quot;</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; A&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; A&quot;</span><span class="p">]:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Forward.&quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -5870,8 +5870,7 @@ receptor-antigen binding specificity.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/nets.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">77</span>
-<span class="normal">78</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
 <span class="normal">79</span>
 <span class="normal">80</span>
 <span class="normal">81</span>
@@ -5890,7 +5889,8 @@ receptor-antigen binding specificity.</p>
 <span class="normal">94</span>
 <span class="normal">95</span>
 <span class="normal">96</span>
-<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
   <span class="bp">self</span><span class="p">,</span>
   <span class="n">inp</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
   <span class="n">out</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -6800,7 +6800,7 @@ receptor-antigen binding specificity.</p>
 
 
 <h2 id="nadl.resnet101" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">resnet101</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">resnet101</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">zero_init_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span></code>
 
 </h2>
 
@@ -6811,15 +6811,51 @@ receptor-antigen binding specificity.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/resnet.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">503</span>
-<span class="normal">504</span>
-<span class="normal">505</span>
-<span class="normal">506</span>
-<span class="normal">507</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnet101</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span>
+<span class="normal">567</span>
+<span class="normal">568</span>
+<span class="normal">569</span>
+<span class="normal">570</span>
+<span class="normal">571</span>
+<span class="normal">572</span>
+<span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnet101</span><span class="p">(</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="n">zero_init_residual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">width_per_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+  <span class="n">replace_stride_with_dilation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">norm_layer</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Norm</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Array</span><span class="p">],</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNet101.&quot;&quot;&quot;</span>
-  <span class="k">assert</span> <span class="n">_args</span> <span class="o">==</span> <span class="p">()</span>
-  <span class="k">del</span> <span class="n">_args</span>
-  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">Bottleneck</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
+    <span class="n">Bottleneck</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+    <span class="n">zero_init_residual</span><span class="o">=</span><span class="n">zero_init_residual</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+    <span class="n">width_per_group</span><span class="o">=</span><span class="n">width_per_group</span><span class="p">,</span>
+    <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="n">replace_stride_with_dilation</span><span class="p">,</span>
+    <span class="n">norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+  <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6830,7 +6866,7 @@ receptor-antigen binding specificity.</p>
 
 
 <h2 id="nadl.resnet152" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">resnet152</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">resnet152</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">zero_init_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span></code>
 
 </h2>
 
@@ -6841,15 +6877,51 @@ receptor-antigen binding specificity.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/resnet.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">510</span>
-<span class="normal">511</span>
-<span class="normal">512</span>
-<span class="normal">513</span>
-<span class="normal">514</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnet152</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnet152</span><span class="p">(</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="n">zero_init_residual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">width_per_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+  <span class="n">replace_stride_with_dilation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">norm_layer</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Norm</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Array</span><span class="p">],</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNet152.&quot;&quot;&quot;</span>
-  <span class="k">assert</span> <span class="n">_args</span> <span class="o">==</span> <span class="p">()</span>
-  <span class="k">del</span> <span class="n">_args</span>
-  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">Bottleneck</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
+    <span class="n">Bottleneck</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+    <span class="n">zero_init_residual</span><span class="o">=</span><span class="n">zero_init_residual</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+    <span class="n">width_per_group</span><span class="o">=</span><span class="n">width_per_group</span><span class="p">,</span>
+    <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="n">replace_stride_with_dilation</span><span class="p">,</span>
+    <span class="n">norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+  <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6860,7 +6932,7 @@ receptor-antigen binding specificity.</p>
 
 
 <h2 id="nadl.resnet18" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">resnet18</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">resnet18</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">zero_init_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span></code>
 
 </h2>
 
@@ -6875,11 +6947,47 @@ receptor-antigen binding specificity.</p>
 <span class="normal">483</span>
 <span class="normal">484</span>
 <span class="normal">485</span>
-<span class="normal">486</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnet18</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnet18</span><span class="p">(</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="n">zero_init_residual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">width_per_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+  <span class="n">replace_stride_with_dilation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">norm_layer</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Norm</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Array</span><span class="p">],</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNet18.&quot;&quot;&quot;</span>
-  <span class="k">assert</span> <span class="n">_args</span> <span class="o">==</span> <span class="p">()</span>
-  <span class="k">del</span> <span class="n">_args</span>
-  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">BasicBlock</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
+    <span class="n">BasicBlock</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+    <span class="n">zero_init_residual</span><span class="o">=</span><span class="n">zero_init_residual</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+    <span class="n">width_per_group</span><span class="o">=</span><span class="n">width_per_group</span><span class="p">,</span>
+    <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="n">replace_stride_with_dilation</span><span class="p">,</span>
+    <span class="n">norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+  <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6890,7 +6998,7 @@ receptor-antigen binding specificity.</p>
 
 
 <h2 id="nadl.resnet34" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">resnet34</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">resnet34</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">zero_init_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span></code>
 
 </h2>
 
@@ -6901,15 +7009,51 @@ receptor-antigen binding specificity.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/resnet.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">489</span>
-<span class="normal">490</span>
-<span class="normal">491</span>
-<span class="normal">492</span>
-<span class="normal">493</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnet34</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnet34</span><span class="p">(</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="n">zero_init_residual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">width_per_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+  <span class="n">replace_stride_with_dilation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">norm_layer</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Norm</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Array</span><span class="p">],</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNet34.&quot;&quot;&quot;</span>
-  <span class="k">assert</span> <span class="n">_args</span> <span class="o">==</span> <span class="p">()</span>
-  <span class="k">del</span> <span class="n">_args</span>
-  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">BasicBlock</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
+    <span class="n">BasicBlock</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+    <span class="n">zero_init_residual</span><span class="o">=</span><span class="n">zero_init_residual</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+    <span class="n">width_per_group</span><span class="o">=</span><span class="n">width_per_group</span><span class="p">,</span>
+    <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="n">replace_stride_with_dilation</span><span class="p">,</span>
+    <span class="n">norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+  <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6920,7 +7064,7 @@ receptor-antigen binding specificity.</p>
 
 
 <h2 id="nadl.resnet50" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">resnet50</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">resnet50</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">zero_init_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span></code>
 
 </h2>
 
@@ -6931,15 +7075,51 @@ receptor-antigen binding specificity.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/resnet.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">496</span>
-<span class="normal">497</span>
-<span class="normal">498</span>
-<span class="normal">499</span>
-<span class="normal">500</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnet50</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnet50</span><span class="p">(</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="n">zero_init_residual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">width_per_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+  <span class="n">replace_stride_with_dilation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">norm_layer</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Norm</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Array</span><span class="p">],</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNet50.&quot;&quot;&quot;</span>
-  <span class="k">assert</span> <span class="n">_args</span> <span class="o">==</span> <span class="p">()</span>
-  <span class="k">del</span> <span class="n">_args</span>
-  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">Bottleneck</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
+    <span class="n">Bottleneck</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+    <span class="n">zero_init_residual</span><span class="o">=</span><span class="n">zero_init_residual</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+    <span class="n">width_per_group</span><span class="o">=</span><span class="n">width_per_group</span><span class="p">,</span>
+    <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="n">replace_stride_with_dilation</span><span class="p">,</span>
+    <span class="n">norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+  <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6950,37 +7130,61 @@ receptor-antigen binding specificity.</p>
 
 
 <h2 id="nadl.resnext101_32x8d" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">resnext101_32x8d</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">resnext101_32x8d</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">zero_init_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>ResNext101_32x8d.</p>
+        <p>ResNet101_32x8d.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/resnet.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">530</span>
-<span class="normal">531</span>
-<span class="normal">532</span>
-<span class="normal">533</span>
-<span class="normal">534</span>
-<span class="normal">535</span>
-<span class="normal">536</span>
-<span class="normal">537</span>
-<span class="normal">538</span>
-<span class="normal">539</span>
-<span class="normal">540</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnext101_32x8d</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNext101_32x8d.&quot;&quot;&quot;</span>
-  <span class="k">assert</span> <span class="n">_args</span> <span class="o">==</span> <span class="p">()</span>
-  <span class="k">del</span> <span class="n">_args</span>
-  <span class="k">assert</span> <span class="n">kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span> <span class="o">==</span> <span class="mi">32</span><span class="p">,</span> <span class="s2">&quot;ResNet101_32x8d only supports groups=32&quot;</span>  <span class="c1"># noqa: PLR2004</span>
-  <span class="k">assert</span> <span class="p">(</span>
-    <span class="n">kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;width_per_group&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span>  <span class="c1"># noqa: PLR2004</span>
-  <span class="p">),</span> <span class="s2">&quot;ResNet101_32x8d only supports width_per_group=8&quot;</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnext101_32x8d</span><span class="p">(</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="n">zero_init_residual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+  <span class="n">width_per_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="n">replace_stride_with_dilation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">norm_layer</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Norm</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Array</span><span class="p">],</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNet101_32x8d.&quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
-    <span class="n">Bottleneck</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">groups</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span>
+    <span class="n">Bottleneck</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+    <span class="n">zero_init_residual</span><span class="o">=</span><span class="n">zero_init_residual</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+    <span class="n">width_per_group</span><span class="o">=</span><span class="n">width_per_group</span><span class="p">,</span>
+    <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="n">replace_stride_with_dilation</span><span class="p">,</span>
+    <span class="n">norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
   <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -6992,37 +7196,61 @@ receptor-antigen binding specificity.</p>
 
 
 <h2 id="nadl.resnext101_64x4d" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">resnext101_64x4d</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">resnext101_64x4d</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">zero_init_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>ResNext101_64x4d.</p>
+        <p>ResNet101_64x4d.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/resnet.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">543</span>
-<span class="normal">544</span>
-<span class="normal">545</span>
-<span class="normal">546</span>
-<span class="normal">547</span>
-<span class="normal">548</span>
-<span class="normal">549</span>
-<span class="normal">550</span>
-<span class="normal">551</span>
-<span class="normal">552</span>
-<span class="normal">553</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnext101_64x4d</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNext101_64x4d.&quot;&quot;&quot;</span>
-  <span class="k">assert</span> <span class="n">_args</span> <span class="o">==</span> <span class="p">()</span>
-  <span class="k">del</span> <span class="n">_args</span>
-  <span class="k">assert</span> <span class="n">kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">==</span> <span class="mi">64</span><span class="p">,</span> <span class="s2">&quot;ResNet101_64x4d only supports groups=64&quot;</span>  <span class="c1"># noqa: PLR2004</span>
-  <span class="k">assert</span> <span class="p">(</span>
-    <span class="n">kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;width_per_group&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>  <span class="c1"># noqa: PLR2004</span>
-  <span class="p">),</span> <span class="s2">&quot;ResNet101_64x4d only supports width_per_group=4&quot;</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">657</span>
+<span class="normal">658</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
+<span class="normal">667</span>
+<span class="normal">668</span>
+<span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span>
+<span class="normal">677</span>
+<span class="normal">678</span>
+<span class="normal">679</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnext101_64x4d</span><span class="p">(</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="n">zero_init_residual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+  <span class="n">width_per_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">replace_stride_with_dilation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">norm_layer</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Norm</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Array</span><span class="p">],</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNet101_64x4d.&quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
-    <span class="n">Bottleneck</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">groups</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span>
+    <span class="n">Bottleneck</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+    <span class="n">zero_init_residual</span><span class="o">=</span><span class="n">zero_init_residual</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+    <span class="n">width_per_group</span><span class="o">=</span><span class="n">width_per_group</span><span class="p">,</span>
+    <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="n">replace_stride_with_dilation</span><span class="p">,</span>
+    <span class="n">norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
   <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -7034,37 +7262,61 @@ receptor-antigen binding specificity.</p>
 
 
 <h2 id="nadl.resnext50_32x4d" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">resnext50_32x4d</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">resnext50_32x4d</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">zero_init_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>ResNext50_32x4d.</p>
+        <p>ResNet50_32x4d.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/resnet.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">517</span>
-<span class="normal">518</span>
-<span class="normal">519</span>
-<span class="normal">520</span>
-<span class="normal">521</span>
-<span class="normal">522</span>
-<span class="normal">523</span>
-<span class="normal">524</span>
-<span class="normal">525</span>
-<span class="normal">526</span>
-<span class="normal">527</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnext50_32x4d</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNext50_32x4d.&quot;&quot;&quot;</span>
-  <span class="k">assert</span> <span class="n">_args</span> <span class="o">==</span> <span class="p">()</span>
-  <span class="k">del</span> <span class="n">_args</span>
-  <span class="k">assert</span> <span class="n">kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span> <span class="o">==</span> <span class="mi">32</span><span class="p">,</span> <span class="s2">&quot;ResNet50_32x4d only supports groups=32&quot;</span>  <span class="c1"># noqa: PLR2004</span>
-  <span class="k">assert</span> <span class="p">(</span>
-    <span class="n">kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;width_per_group&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>  <span class="c1"># noqa: PLR2004</span>
-  <span class="p">),</span> <span class="s2">&quot;ResNet50_32x4d only supports width_per_group=4&quot;</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resnext50_32x4d</span><span class="p">(</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="n">zero_init_residual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+  <span class="n">width_per_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="n">replace_stride_with_dilation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">norm_layer</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Norm</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Array</span><span class="p">],</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;ResNet50_32x4d.&quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
-    <span class="n">Bottleneck</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">groups</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span>
+    <span class="n">Bottleneck</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+    <span class="n">zero_init_residual</span><span class="o">=</span><span class="n">zero_init_residual</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+    <span class="n">width_per_group</span><span class="o">=</span><span class="n">width_per_group</span><span class="p">,</span>
+    <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="n">replace_stride_with_dilation</span><span class="p">,</span>
+    <span class="n">norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
   <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -7388,7 +7640,7 @@ receptor-antigen binding specificity.</p>
 
 
 <h2 id="nadl.wide_resnet101_2" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">wide_resnet101_2</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">wide_resnet101_2</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">zero_init_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span></code>
 
 </h2>
 
@@ -7399,25 +7651,51 @@ receptor-antigen binding specificity.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/resnet.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">566</span>
-<span class="normal">567</span>
-<span class="normal">568</span>
-<span class="normal">569</span>
-<span class="normal">570</span>
-<span class="normal">571</span>
-<span class="normal">572</span>
-<span class="normal">573</span>
-<span class="normal">574</span>
-<span class="normal">575</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">wide_resnet101_2</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span>
-  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">707</span>
+<span class="normal">708</span>
+<span class="normal">709</span>
+<span class="normal">710</span>
+<span class="normal">711</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span>
+<span class="normal">716</span>
+<span class="normal">717</span>
+<span class="normal">718</span>
+<span class="normal">719</span>
+<span class="normal">720</span>
+<span class="normal">721</span>
+<span class="normal">722</span>
+<span class="normal">723</span>
+<span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span>
+<span class="normal">727</span>
+<span class="normal">728</span>
+<span class="normal">729</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">wide_resnet101_2</span><span class="p">(</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="n">zero_init_residual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">width_per_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+  <span class="n">replace_stride_with_dilation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">norm_layer</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Norm</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Array</span><span class="p">],</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Wide ResNet101_2.&quot;&quot;&quot;</span>
-  <span class="k">assert</span> <span class="n">_args</span> <span class="o">==</span> <span class="p">()</span>
-  <span class="k">del</span> <span class="n">_args</span>
-  <span class="k">assert</span> <span class="p">(</span>
-    <span class="n">kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;width_per_group&quot;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">==</span> <span class="mi">64</span>  <span class="c1"># noqa: PLR2004</span>
-  <span class="p">),</span> <span class="s2">&quot;Wide ResNet101_2 only supports width_per_group=64&quot;</span>
-  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">Bottleneck</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
+    <span class="n">Bottleneck</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+    <span class="n">zero_init_residual</span><span class="o">=</span><span class="n">zero_init_residual</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+    <span class="n">width_per_group</span><span class="o">=</span><span class="n">width_per_group</span><span class="p">,</span>
+    <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="n">replace_stride_with_dilation</span><span class="p">,</span>
+    <span class="n">norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+  <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7428,7 +7706,7 @@ receptor-antigen binding specificity.</p>
 
 
 <h2 id="nadl.wide_resnet50_2" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">wide_resnet50_2</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">wide_resnet50_2</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">zero_init_residual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">width_per_group</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm_layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span></code>
 
 </h2>
 
@@ -7439,21 +7717,51 @@ receptor-antigen binding specificity.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/resnet.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">556</span>
-<span class="normal">557</span>
-<span class="normal">558</span>
-<span class="normal">559</span>
-<span class="normal">560</span>
-<span class="normal">561</span>
-<span class="normal">562</span>
-<span class="normal">563</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">wide_resnet50_2</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span> <span class="o">*</span><span class="n">_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span>
+<span class="normal">697</span>
+<span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span>
+<span class="normal">702</span>
+<span class="normal">703</span>
+<span class="normal">704</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">wide_resnet50_2</span><span class="p">(</span>
+  <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span><span class="p">,</span>
+  <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+  <span class="n">zero_init_residual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="n">width_per_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+  <span class="n">replace_stride_with_dilation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">norm_layer</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Norm</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Array</span><span class="p">],</span> <span class="n">Array</span><span class="p">]</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResNet</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Wide ResNet50_2.&quot;&quot;&quot;</span>
-  <span class="k">assert</span> <span class="n">_args</span> <span class="o">==</span> <span class="p">()</span>
-  <span class="k">del</span> <span class="n">_args</span>
-  <span class="k">assert</span> <span class="p">(</span>
-    <span class="n">kwds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;width_per_group&quot;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">==</span> <span class="mi">64</span>  <span class="c1"># noqa: PLR2004</span>
-  <span class="p">),</span> <span class="s2">&quot;Wide ResNet50_2 only supports width_per_group=64&quot;</span>
-  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">Bottleneck</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">ResNet</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
+    <span class="n">Bottleneck</span><span class="p">,</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span>
+    <span class="n">zero_init_residual</span><span class="o">=</span><span class="n">zero_init_residual</span><span class="p">,</span>
+    <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+    <span class="n">width_per_group</span><span class="o">=</span><span class="n">width_per_group</span><span class="p">,</span>
+    <span class="n">replace_stride_with_dilation</span><span class="o">=</span><span class="n">replace_stride_with_dilation</span><span class="p">,</span>
+    <span class="n">norm_layer</span><span class="o">=</span><span class="n">norm_layer</span><span class="p">,</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+  <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
