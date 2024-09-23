@@ -56,11 +56,14 @@ if TYPE_CHECKING:
   from rich.console import Console
 
 
+_sentinel = cast(eqx.nn.State, object())
+
+
 class BaseTrainState[T, M](eqx.Module):
   """Train state."""
 
   model: M
-  state: eqx.nn.State | None
+  state: eqx.nn.State
   tx: optax.GradientTransformation
   opt_state: optax.OptState
   loss: jax.Array
@@ -74,7 +77,7 @@ class BaseTrainState[T, M](eqx.Module):
     raise NotImplementedError
 
   def apply_grads(
-    self, loss: jax.Array, grads: eqx.Module, state: eqx.nn.State | None = None
+    self, loss: jax.Array, grads: eqx.Module, state: eqx.nn.State = _sentinel
   ) -> BaseTrainState[T, M]:
     """Apply gradients."""
     updates, opt_state = self.tx.update(
