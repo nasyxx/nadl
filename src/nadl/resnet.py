@@ -53,7 +53,7 @@ from equinox.nn import (
 from jaxtyping import Array, PRNGKeyArray, PyTree
 from typing import Protocol, Self
 
-from .surgery import init_fn, init_surgery
+from nadl import init_fn, init_surgery
 
 
 def conv3x3(
@@ -459,7 +459,7 @@ class ResNet(Module):
     return model
 
   def __call__(
-    self, x: Array, state: State, key: PRNGKeyArray | None = None
+    self, x: Array, state: State, *, key: PRNGKeyArray | None = None
   ) -> tuple[Array, State]:
     """Forward."""
     del key
@@ -479,97 +479,251 @@ class ResNet(Module):
     return x, state
 
 
-def resnet18[**P](key: PRNGKeyArray, *_args: P.args, **kwds: P.kwargs) -> ResNet:
+def resnet18(
+  key: PRNGKeyArray,
+  num_classes: int = 1000,
+  zero_init_residual: bool = False,
+  groups: int = 1,
+  width_per_group: int = 64,
+  replace_stride_with_dilation: list[bool] | None = None,
+  norm_layer: type[Norm] | None = None,
+  activation: Callable[[Array], Array] = jax.nn.relu,
+) -> ResNet:
   """ResNet18."""
-  assert _args == ()
-  del _args
-  return ResNet.init(BasicBlock, [2, 2, 2, 2], key=key, **kwds)
+  return ResNet.init(
+    BasicBlock,
+    [2, 2, 2, 2],
+    num_classes=num_classes,
+    zero_init_residual=zero_init_residual,
+    groups=groups,
+    width_per_group=width_per_group,
+    replace_stride_with_dilation=replace_stride_with_dilation,
+    norm_layer=norm_layer,
+    activation=activation,
+    key=key,
+  )
 
 
-def resnet34[**P](key: PRNGKeyArray, *_args: P.args, **kwds: P.kwargs) -> ResNet:
+def resnet34(
+  key: PRNGKeyArray,
+  num_classes: int = 1000,
+  zero_init_residual: bool = False,
+  groups: int = 1,
+  width_per_group: int = 64,
+  replace_stride_with_dilation: list[bool] | None = None,
+  norm_layer: type[Norm] | None = None,
+  activation: Callable[[Array], Array] = jax.nn.relu,
+) -> ResNet:
   """ResNet34."""
-  assert _args == ()
-  del _args
-  return ResNet.init(BasicBlock, [3, 4, 6, 3], key=key, **kwds)
+  return ResNet.init(
+    BasicBlock,
+    [3, 4, 6, 3],
+    num_classes=num_classes,
+    zero_init_residual=zero_init_residual,
+    groups=groups,
+    width_per_group=width_per_group,
+    replace_stride_with_dilation=replace_stride_with_dilation,
+    norm_layer=norm_layer,
+    activation=activation,
+    key=key,
+  )
 
 
-def resnet50[**P](key: PRNGKeyArray, *_args: P.args, **kwds: P.kwargs) -> ResNet:
+def resnet50(
+  key: PRNGKeyArray,
+  num_classes: int = 1000,
+  zero_init_residual: bool = False,
+  groups: int = 1,
+  width_per_group: int = 64,
+  replace_stride_with_dilation: list[bool] | None = None,
+  norm_layer: type[Norm] | None = None,
+  activation: Callable[[Array], Array] = jax.nn.relu,
+) -> ResNet:
   """ResNet50."""
-  assert _args == ()
-  del _args
-  return ResNet.init(Bottleneck, [3, 4, 6, 3], key=key, **kwds)
+  return ResNet.init(
+    Bottleneck,
+    [3, 4, 6, 3],
+    num_classes=num_classes,
+    zero_init_residual=zero_init_residual,
+    groups=groups,
+    width_per_group=width_per_group,
+    replace_stride_with_dilation=replace_stride_with_dilation,
+    norm_layer=norm_layer,
+    activation=activation,
+    key=key,
+  )
 
 
-def resnet101[**P](key: PRNGKeyArray, *_args: P.args, **kwds: P.kwargs) -> ResNet:
+def resnet101(
+  key: PRNGKeyArray,
+  num_classes: int = 1000,
+  zero_init_residual: bool = False,
+  groups: int = 1,
+  width_per_group: int = 64,
+  replace_stride_with_dilation: list[bool] | None = None,
+  norm_layer: type[Norm] | None = None,
+  activation: Callable[[Array], Array] = jax.nn.relu,
+) -> ResNet:
   """ResNet101."""
-  assert _args == ()
-  del _args
-  return ResNet.init(Bottleneck, [3, 4, 23, 3], key=key, **kwds)
+  return ResNet.init(
+    Bottleneck,
+    [3, 4, 23, 3],
+    num_classes=num_classes,
+    zero_init_residual=zero_init_residual,
+    groups=groups,
+    width_per_group=width_per_group,
+    replace_stride_with_dilation=replace_stride_with_dilation,
+    norm_layer=norm_layer,
+    activation=activation,
+    key=key,
+  )
 
 
-def resnet152[**P](key: PRNGKeyArray, *_args: P.args, **kwds: P.kwargs) -> ResNet:
+def resnet152(
+  key: PRNGKeyArray,
+  num_classes: int = 1000,
+  zero_init_residual: bool = False,
+  groups: int = 1,
+  width_per_group: int = 64,
+  replace_stride_with_dilation: list[bool] | None = None,
+  norm_layer: type[Norm] | None = None,
+  activation: Callable[[Array], Array] = jax.nn.relu,
+) -> ResNet:
   """ResNet152."""
-  assert _args == ()
-  del _args
-  return ResNet.init(Bottleneck, [3, 8, 36, 3], key=key, **kwds)
-
-
-def resnext50_32x4d[**P](key: PRNGKeyArray, *_args: P.args, **kwds: P.kwargs) -> ResNet:
-  """ResNext50_32x4d."""
-  assert _args == ()
-  del _args
-  assert kwds.setdefault("groups", 32) == 32, "ResNet50_32x4d only supports groups=32"  # noqa: PLR2004
-  assert (
-    kwds.setdefault("width_per_group", 4) == 4  # noqa: PLR2004
-  ), "ResNet50_32x4d only supports width_per_group=4"
   return ResNet.init(
-    Bottleneck, [3, 4, 6, 3], groups=32, width_per_group=4, key=key, **kwds
+    Bottleneck,
+    [3, 8, 36, 3],
+    num_classes=num_classes,
+    zero_init_residual=zero_init_residual,
+    groups=groups,
+    width_per_group=width_per_group,
+    replace_stride_with_dilation=replace_stride_with_dilation,
+    norm_layer=norm_layer,
+    activation=activation,
+    key=key,
   )
 
 
-def resnext101_32x8d[**P](key: PRNGKeyArray, *_args: P.args, **kwds: P.kwargs) -> ResNet:
-  """ResNext101_32x8d."""
-  assert _args == ()
-  del _args
-  assert kwds.setdefault("groups", 32) == 32, "ResNet101_32x8d only supports groups=32"  # noqa: PLR2004
-  assert (
-    kwds.setdefault("width_per_group", 8) == 8  # noqa: PLR2004
-  ), "ResNet101_32x8d only supports width_per_group=8"
+def resnext50_32x4d(
+  key: PRNGKeyArray,
+  num_classes: int = 1000,
+  zero_init_residual: bool = False,
+  groups: int = 32,
+  width_per_group: int = 4,
+  replace_stride_with_dilation: list[bool] | None = None,
+  norm_layer: type[Norm] | None = None,
+  activation: Callable[[Array], Array] = jax.nn.relu,
+) -> ResNet:
+  """ResNet50_32x4d."""
   return ResNet.init(
-    Bottleneck, [3, 4, 23, 3], groups=32, width_per_group=8, key=key, **kwds
+    Bottleneck,
+    [3, 4, 6, 3],
+    num_classes=num_classes,
+    zero_init_residual=zero_init_residual,
+    groups=groups,
+    width_per_group=width_per_group,
+    replace_stride_with_dilation=replace_stride_with_dilation,
+    norm_layer=norm_layer,
+    activation=activation,
+    key=key,
   )
 
 
-def resnext101_64x4d[**P](key: PRNGKeyArray, *_args: P.args, **kwds: P.kwargs) -> ResNet:
-  """ResNext101_64x4d."""
-  assert _args == ()
-  del _args
-  assert kwds.setdefault("groups", 64) == 64, "ResNet101_64x4d only supports groups=64"  # noqa: PLR2004
-  assert (
-    kwds.setdefault("width_per_group", 4) == 4  # noqa: PLR2004
-  ), "ResNet101_64x4d only supports width_per_group=4"
+def resnext101_32x8d(
+  key: PRNGKeyArray,
+  num_classes: int = 1000,
+  zero_init_residual: bool = False,
+  groups: int = 32,
+  width_per_group: int = 8,
+  replace_stride_with_dilation: list[bool] | None = None,
+  norm_layer: type[Norm] | None = None,
+  activation: Callable[[Array], Array] = jax.nn.relu,
+) -> ResNet:
+  """ResNet101_32x8d."""
   return ResNet.init(
-    Bottleneck, [3, 4, 23, 3], groups=64, width_per_group=4, key=key, **kwds
+    Bottleneck,
+    [3, 4, 23, 3],
+    num_classes=num_classes,
+    zero_init_residual=zero_init_residual,
+    groups=groups,
+    width_per_group=width_per_group,
+    replace_stride_with_dilation=replace_stride_with_dilation,
+    norm_layer=norm_layer,
+    activation=activation,
+    key=key,
   )
 
 
-def wide_resnet50_2[**P](key: PRNGKeyArray, *_args: P.args, **kwds: P.kwargs) -> ResNet:
+def resnext101_64x4d(
+  key: PRNGKeyArray,
+  num_classes: int = 1000,
+  zero_init_residual: bool = False,
+  groups: int = 64,
+  width_per_group: int = 4,
+  replace_stride_with_dilation: list[bool] | None = None,
+  norm_layer: type[Norm] | None = None,
+  activation: Callable[[Array], Array] = jax.nn.relu,
+) -> ResNet:
+  """ResNet101_64x4d."""
+  return ResNet.init(
+    Bottleneck,
+    [3, 4, 23, 3],
+    num_classes=num_classes,
+    zero_init_residual=zero_init_residual,
+    groups=groups,
+    width_per_group=width_per_group,
+    replace_stride_with_dilation=replace_stride_with_dilation,
+    norm_layer=norm_layer,
+    activation=activation,
+    key=key,
+  )
+
+
+def wide_resnet50_2(
+  key: PRNGKeyArray,
+  num_classes: int = 1000,
+  zero_init_residual: bool = False,
+  groups: int = 1,
+  width_per_group: int = 64,
+  replace_stride_with_dilation: list[bool] | None = None,
+  norm_layer: type[Norm] | None = None,
+  activation: Callable[[Array], Array] = jax.nn.relu,
+) -> ResNet:
   """Wide ResNet50_2."""
-  assert _args == ()
-  del _args
-  assert (
-    kwds.setdefault("width_per_group", 64) == 64  # noqa: PLR2004
-  ), "Wide ResNet50_2 only supports width_per_group=64"
-  return ResNet.init(Bottleneck, [3, 4, 6, 3], key=key, **kwds)
+  return ResNet.init(
+    Bottleneck,
+    [3, 4, 6, 3],
+    num_classes=num_classes,
+    zero_init_residual=zero_init_residual,
+    groups=groups,
+    width_per_group=width_per_group,
+    replace_stride_with_dilation=replace_stride_with_dilation,
+    norm_layer=norm_layer,
+    activation=activation,
+    key=key,
+  )
 
 
-def wide_resnet101_2[**P](
-  key: PRNGKeyArray, *_args: P.args, **kwds: P.kwargs
+def wide_resnet101_2(
+  key: PRNGKeyArray,
+  num_classes: int = 1000,
+  zero_init_residual: bool = False,
+  groups: int = 1,
+  width_per_group: int = 64,
+  replace_stride_with_dilation: list[bool] | None = None,
+  norm_layer: type[Norm] | None = None,
+  activation: Callable[[Array], Array] = jax.nn.relu,
 ) -> ResNet:
   """Wide ResNet101_2."""
-  assert _args == ()
-  del _args
-  assert (
-    kwds.setdefault("width_per_group", 64) == 64  # noqa: PLR2004
-  ), "Wide ResNet101_2 only supports width_per_group=64"
-  return ResNet.init(Bottleneck, [3, 4, 23, 3], key=key, **kwds)
+  return ResNet.init(
+    Bottleneck,
+    [3, 4, 23, 3],
+    num_classes=num_classes,
+    zero_init_residual=zero_init_residual,
+    groups=groups,
+    width_per_group=width_per_group,
+    replace_stride_with_dilation=replace_stride_with_dilation,
+    norm_layer=norm_layer,
+    activation=activation,
+    key=key,
+  )

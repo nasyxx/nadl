@@ -49,6 +49,7 @@ from .resnet import (
   resnet50,
   resnet101,
   resnet152,
+  ResNet,
   resnext50_32x4d,
   resnext101_32x8d,
   resnext101_64x4d,
@@ -148,6 +149,7 @@ class FastKAN(eqx.Module):
 __all__ = [
   "FastKAN",
   "FastKANLayer",
+  "ResNet",
   "pMTnet",
   "resnet18",
   "resnet34",
