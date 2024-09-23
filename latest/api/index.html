@@ -2424,10 +2424,7 @@ license  : GPL-3.0+</p>
 
               <details class="quote">
                 <summary>Source code in <code>nadl/states.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
 <span class="normal">65</span>
@@ -2453,11 +2450,14 @@ license  : GPL-3.0+</p>
 <span class="normal">85</span>
 <span class="normal">86</span>
 <span class="normal">87</span>
-<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">](</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">](</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Train state.&quot;&quot;&quot;</span>
 
   <span class="n">model</span><span class="p">:</span> <span class="n">M</span>
-  <span class="n">state</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">State</span> <span class="o">|</span> <span class="kc">None</span>
+  <span class="n">state</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">State</span>
   <span class="n">tx</span><span class="p">:</span> <span class="n">optax</span><span class="o">.</span><span class="n">GradientTransformation</span>
   <span class="n">opt_state</span><span class="p">:</span> <span class="n">optax</span><span class="o">.</span><span class="n">OptState</span>
   <span class="n">loss</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span>
@@ -2471,7 +2471,7 @@ license  : GPL-3.0+</p>
     <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
   <span class="k">def</span> <span class="nf">apply_grads</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">grads</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">State</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">grads</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">State</span> <span class="o">=</span> <span class="n">_sentinel</span>
   <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply gradients.&quot;&quot;&quot;</span>
     <span class="n">updates</span><span class="p">,</span> <span class="n">opt_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
@@ -2502,7 +2502,7 @@ license  : GPL-3.0+</p>
 
 
 <h3 id="nadl.BaseTrainState.apply_grads" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">apply_grads</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">grads</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">apply_grads</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">grads</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">_sentinel</span><span class="p">)</span></code>
 
 </h3>
 
@@ -2513,10 +2513,7 @@ license  : GPL-3.0+</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/states.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
 <span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
@@ -2525,8 +2522,11 @@ license  : GPL-3.0+</p>
 <span class="normal">85</span>
 <span class="normal">86</span>
 <span class="normal">87</span>
-<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply_grads</span><span class="p">(</span>
-  <span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">grads</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">State</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply_grads</span><span class="p">(</span>
+  <span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">grads</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">eqx</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">State</span> <span class="o">=</span> <span class="n">_sentinel</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTrainState</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">]:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Apply gradients.&quot;&quot;&quot;</span>
   <span class="n">updates</span><span class="p">,</span> <span class="n">opt_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
@@ -2564,11 +2564,11 @@ license  : GPL-3.0+</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/states.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="nd">@abstractmethod</span>
 <span class="k">def</span> <span class="nf">init</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Self</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Create initial state.&quot;&quot;&quot;</span>
@@ -7535,10 +7535,7 @@ receptor-antigen binding specificity.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/states.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 97</span>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
@@ -7587,7 +7584,10 @@ receptor-antigen binding specificity.</p>
 <span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
-<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">state_fn</span><span class="p">(</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">state_fn</span><span class="p">(</span>
   <span class="n">rpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
   <span class="n">console</span><span class="p">:</span> <span class="n">Console</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
   <span class="n">keeps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
