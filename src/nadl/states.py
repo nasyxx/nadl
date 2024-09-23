@@ -60,6 +60,7 @@ class BaseTrainState[T, M](eqx.Module):
   """Train state."""
 
   model: M
+  state: eqx.nn.State | None
   tx: optax.GradientTransformation
   opt_state: optax.OptState
   loss: jax.Array
@@ -72,16 +73,18 @@ class BaseTrainState[T, M](eqx.Module):
     """Create initial state."""
     raise NotImplementedError
 
-  def apply_grads(self, loss: jax.Array, grads: eqx.Module) -> BaseTrainState[T, M]:
+  def apply_grads(
+    self, loss: jax.Array, grads: eqx.Module, state: eqx.nn.State | None = None
+  ) -> BaseTrainState[T, M]:
     """Apply gradients."""
     updates, opt_state = self.tx.update(
       cast(optax.Updates, grads), self.opt_state, params=cast(optax.Params, self.model)
     )
     model = eqx.apply_updates(self.model, updates)
     return eqx.tree_at(
-      lambda x: (x.model, x.opt_state, x.loss, x.step),
+      lambda x: (x.model, x.state, x.opt_state, x.loss, x.step),
       self,
-      (model, opt_state, loss, self.step + 1),
+      (model, state, opt_state, loss, self.step + 1),
     )
 
 
