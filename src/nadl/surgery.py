@@ -65,9 +65,29 @@ def is_linear(x: Any) -> TypeGuard[eqx.nn.Linear]:  # noqa: ANN401
   return isinstance(x, eqx.nn.Linear)
 
 
-def get_weight(x: Any) -> Any:  # noqa: ANN401
+def is_conv(x: Any) -> TypeGuard[eqx.nn.Conv]:  # noqa: ANN401
+  """Check if a module is a convolution layer."""
+  return isinstance(x, eqx.nn.Conv)
+
+
+def is_conv1d(x: Any) -> TypeGuard[eqx.nn.Conv1d]:  # noqa: ANN401
+  """Check if a module is a 1D convolution layer."""
+  return isinstance(x, eqx.nn.Conv1d)
+
+
+def is_conv2d(x: Any) -> TypeGuard[eqx.nn.Conv2d]:  # noqa: ANN401
+  """Check if a module is a 2D convolution layer."""
+  return isinstance(x, eqx.nn.Conv2d)
+
+
+def get_weight(x: Any) -> Array:  # noqa: ANN401
   """Get weight of a module."""
   return x.weight
+
+
+def get_bias(x: Any) -> Array:  # noqa: ANN401
+  """Get bias of a module."""
+  return x.bias
 
 
 def init_surgery[T, M](

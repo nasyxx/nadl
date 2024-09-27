@@ -35,8 +35,9 @@ license  : GPL-3.0+
 NADL
 """
 
+from . import data_v1 as datav1
 from .blocks import FastKANLayer, RadialBasisFunction, SplineLinear
-from .data import DState, IdxDataloader, es_loop
+from .data import DataLoader, DState, batch_index, es_loop, fallback_argsort
 from .keys import Keys, new_key
 from .loops import PG, RESC, PGThread
 from .metrics import (
@@ -73,6 +74,17 @@ from .preprocessing import (
   standard_scaler,
 )
 from .states import BaseTrainState, T_savefn, state_fn
+from .surgery import (
+  get_bias,
+  get_weight,
+  init_fn,
+  init_surgery,
+  is_conv,
+  is_conv1d,
+  is_conv2d,
+  is_linear,
+  kaiming_init,
+)
 from .utils import (
   all_array,
   batch_array_p,
@@ -83,9 +95,8 @@ from .utils import (
   rle,
   rle_array,
 )
-from .surgery import init_fn, kaiming_init, is_linear, get_weight, init_surgery
 
-__version__ = "1.11.1"
+__version__ = "1.12.0"
 
 __all__ = [
   "PG",
@@ -94,9 +105,9 @@ __all__ = [
   "Accuracy",
   "BaseTrainState",
   "DState",
+  "DataLoader",
   "FastKAN",
   "FastKANLayer",
-  "IdxDataloader",
   "Keys",
   "Metric",
   "Metric",
@@ -107,18 +118,25 @@ __all__ = [
   "all_array",
   "average_precision_score",
   "batch_array_p",
+  "batch_index",
   "classit",
   "convert",
+  "datav1",
   "dice_coef",
   "es_loop",
+  "fallback_argsort",
   "filter_concat",
   "filter_tree",
+  "get_bias",
   "get_weight",
   "identity_scaler",
   "info_nce",
   "init_fn",
   "init_surgery",
   "iou_coef",
+  "is_conv",
+  "is_conv1d",
+  "is_conv2d",
   "is_linear",
   "kaiming_init",
   "min_max_scaler",

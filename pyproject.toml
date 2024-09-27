@@ -53,6 +53,7 @@ dev = [
     "naipyext[all]>=0.10.0",
     "dm-tree>=0.1.8",
     "optree>=0.12.1",
+    "types-tqdm>=4.66.0.20240417",
 ]
 [tool.mypy]
 exclude = [

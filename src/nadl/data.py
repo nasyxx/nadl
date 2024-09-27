@@ -32,26 +32,28 @@ filename : data.py
 project  : nadl
 license  : GPL-3.0+
 
-Simple dataset and dataloader.
+Simple dataset and dataloader version 2.
 """
 
-from __future__ import annotations
+from collections.abc import Callable, Iterator
+from warnings import warn
 
 import jax
 import jax.numpy as jnp
-from equinox import Module, filter_jit, filter_vmap
+from equinox import Module, field, filter_jit, filter_vmap
+from equinox.nn import Identity
 
-from typing import TYPE_CHECKING, NamedTuple
+from jaxtyping import Array, Bool, Int, PRNGKeyArray
+from typing import NamedTuple, Protocol, cast
 
 import numpy as np
+
+from einops import repeat
 
 from .keys import Keys
 from .loops import PG, RESC, PGThread
 
-if TYPE_CHECKING:
-  from collections.abc import Callable, Iterator
-
-  from jaxtyping import Array, Bool, Int
+type _IDX_FN = Callable[[Int[Array, ""]], DState[Int[Array, " b d"]]]
 
 
 class DState[T](NamedTuple):
@@ -59,8 +61,10 @@ class DState[T](NamedTuple):
 
   xs: T
   pad: Bool[Array, " b"]
+  length: Int[Array, ""]
   epoch: Int[Array, ""] = jnp.asarray(0)
   step: Int[Array, ""] = jnp.asarray(0)
+  key: PRNGKeyArray = field(default_factory=lambda: jax.random.key(42))
   name: str | None = None
 
 
@@ -79,69 +83,172 @@ def fallback_argsort(x: jax.Array, axis: int | None = None) -> jax.Array:
   return x.argsort(axis=axis)
 
 
-class IdxDataloader(Module):
-  """Simple index dataloader."""
+def batch_index(
+  length: int,
+  batch_size: int,
+  drop_last: bool = False,
+  shuffle: bool = False,
+  *,
+  key: PRNGKeyArray | None = None,
+) -> _IDX_FN:
+  """Batchify the index."""
+  length = length if not drop_last else length - length % batch_size
+  pad = (batch_size - r) % batch_size if (r := length % batch_size) else 0
+  drop_num = length % batch_size if drop_last else 0
+  length = length if not drop_last else length - drop_num
+  _idxes = jnp.arange(length)
+  dlength = jnp.asarray(length // batch_size + (1 if not drop_num else 0))
+  depoch = jnp.asarray(0)
+  if key is None:
+    warn("Key is not provided, using 42 as random key seed.", stacklevel=1)
+    key = jax.random.key(42)
 
-  length: int
-  pad: int
-  batch_size: int
-  drop_num: int
+  @filter_jit
+  def _index(epoch: Int[Array, ""] = depoch) -> DState[Int[Array, " b d"]]:
+    assert epoch.ndim == 0, "Epoch must be a scalar."
+    new_key = jax.random.fold_in(key, epoch)
+    if shuffle:
+      idxes = jnp.take_along_axis(
+        _idxes,
+        # NOTE: Fallback to numpy argsort since it has performance isssue in CPU.
+        # https://github.com/google/jax/issues/10434
+        fallback_argsort(jax.random.uniform(new_key, (length,))),
+        axis=0,
+      )
+    else:
+      idxes = _idxes
+
+    idxes = jnp.r_[idxes, jnp.full(pad, -1, idxes.dtype)]
+    idxes = idxes[: length + pad].reshape(-1, batch_size)
+    return DState(
+      idxes,
+      jnp.where(idxes == -1, 1, 0).astype(bool),
+      dlength,
+      epoch,
+      key=jax.random.split(new_key, idxes.shape[0]),
+    )
+
+  return _index
+
+
+class _Trans[_I, _O](Protocol):
+  def __call__(self, x: _I, *, key: PRNGKeyArray) -> _O: ...
+
+
+class DataLoader[T](Module):
+  """Simple data loader."""
+
+  gen: _IDX_FN
+  embed: _Trans[Int[Array, " d"], T]
+  transform: _Trans[T, T]
+  _default_epoch: Int[Array, ""]
+  _length: int
+  _data_length: int
+  _batch_size: int
 
   def __init__(
     self,
     length: int,
     batch_size: int,
     drop_last: bool = False,
+    shuffle: bool = False,
+    key: PRNGKeyArray | None = None,
+    *,
+    embed: _Trans[Int[Array, " d"], T] | None = None,
+    transform: _Trans[T, T] | None = None,
   ) -> None:
     """Initiate the dataloader."""
-    self.length = length
-    length = length if not drop_last else length - length % batch_size
-    pad = (batch_size - r) % batch_size if (r := length % batch_size) else 0
-    self.pad = pad if pad != batch_size else 0
-    self.batch_size = batch_size
-    self.drop_num = self.length % batch_size if drop_last else 0
+    self.gen = filter_jit(batch_index(length, batch_size, drop_last, shuffle, key=key))
+    self.embed = (
+      embed if embed is not None else cast(_Trans[Int[Array, " d"], T], Identity())
+    )
+    self.transform = (
+      transform if transform is not None else cast(_Trans[T, T], Identity())
+    )
+    # why jit make it slower?
+    # self.embed = filter_jit(self.embed)
+    # self.transform = filter_jit(self.transform)
+    self._default_epoch = jnp.asarray(0)
+    self._length = self.gen(self._default_epoch).length.item()
+    self._data_length = length
+    self._batch_size = batch_size
 
-  def __call__(self, key: jax.Array | None = None) -> DState[Int[Array, " b d"]]:
+  def __call__(self, epoch: Int[Array, ""] | None = None) -> Iterator[DState[T]]:
     """Get the indexes."""
-    idxes = jnp.arange(self.length)
-    if key is not None:
-      idxes = jnp.take_along_axis(
-        idxes,
-        # NOTE: Fallback to numpy argsort since it has performance isssue in CPU.
-        # https://github.com/google/jax/issues/10434
-        fallback_argsort(jax.random.uniform(key, (self.length,))),
-        axis=0,
+    data = self.gen(self._default_epoch) if epoch is None else self.gen(epoch)
+    for step, d, key in zip(jnp.arange(len(self)) + 1, data.xs, data.key):
+      yield DState(
+        self.transform(self.embed(d, key=key), key=key),
+        data.pad,
+        data.length,
+        data.epoch,
+        step,
+        key,
       )
-    length = self.length if not self.drop_num else self.length - self.drop_num
 
-    idxes = jnp.r_[idxes, jnp.full(self.pad, -1, idxes.dtype)]
-    idxes = idxes[: length + self.pad].reshape(-1, self.batch_size)
-    return DState(idxes, jnp.where(idxes == -1, 1, 0).astype(bool))
+  @filter_jit
+  def _ex(self, x: Array) -> Array:
+    """Ex epoch and steps.
+
+    epoch len *batch -> (epoch len) * batch
+    """
+    if x.ndim > 1:
+      return x.reshape(-1, *x.shape[2:])
+    return repeat(x, "e ... -> (e l) ...", l=self._length)
+
+  def epoch_iter(
+    self, epoch_start: int, epoch_end: int | None = None
+  ) -> Iterator[DState[T]]:
+    """Iterate with epochs."""
+    gen = filter_jit(filter_vmap(self.gen))
+    # steps = jnp.arange(self._length)
+    if epoch_end is None:
+      epoch_end = epoch_start + 1
+      epoch_start = 1
+    data = gen(jnp.arange(epoch_start, epoch_end))
+
+    data = jax.tree.map(self._ex, data)
+    for step, x, pad, length, epoch, key in zip(
+      jnp.arange(data.xs.shape[0]) + 1,
+      data.xs,
+      data.pad,
+      data.length,
+      data.epoch,
+      data.key,
+    ):
+      yield DState(
+        self.transform(self.embed(x, key=key), key=key),
+        pad,
+        length,
+        epoch,
+        step,
+        key,
+      )
+
+  def viter(
+    self, epochs: int, chunks: int = 100, *, epoch_bias: int = 1
+  ) -> Iterator[DState[T]]:
+    """Iterate with epochs and chunks."""
+    for chunk in range(epoch_bias, epochs + epoch_bias, chunks):
+      yield from self.epoch_iter(chunk, min(chunk + chunks, epochs + epoch_bias))
 
   def __len__(self) -> int:
-    """Length of the dataloader."""
-    return self.length // self.batch_size + (
-      1 if (not self.drop_num) and self.length % self.batch_size else 0
-    )
+    """Get the length."""
+    return self._length
 
 
 def es_loop[T](
-  dl: IdxDataloader,
+  dl: DataLoader[T],
   pg: PG,
-  keys: Keys | None = None,
   epochs: int = 1,
   start_epoch: int = 1,
+  chunks: int = 100,
   prefix: str = "L",
   es: str = "E",
   ss: str = "S",
-  transform: Callable[[Int[Array, " a"]], T] | None = None,
 ) -> Iterator[DState[T]]:
   """Simple epoch loop."""
   assert epochs > 0, "Epochs should be greater than 0."
-  if transform:
-    transform = filter_jit(transform)
-
-  steps = len(dl)
   es, ss = f"{prefix}-{es}", f"{prefix}-{ss}"
   if es in pg.tasks:
     pg.pg.reset(pg.tasks[es], total=epochs)
@@ -149,48 +256,44 @@ def es_loop[T](
     pg.add_task(es, total=epochs, res="", visible=epochs > 1)
   pg.advance(pg.tasks[es], start_epoch - 1)
   if ss in pg.tasks:
-    pg.pg.reset(pg.tasks[ss], total=steps * epochs, res="")
+    pg.pg.reset(pg.tasks[ss], total=len(dl) * epochs, res="")
   else:
-    pg.add_task(ss, total=steps * epochs, res="")
-  pg.advance(pg.tasks[ss], (start_epoch - 1) * steps)
-
-  kf = filter_jit(filter_vmap(keys.reserve(epochs))) if keys else lambda _: None
-  df = filter_jit(filter_vmap(dl, axis_size=1))
-  ds = df() if keys is None else df(kf(jnp.arange(epochs)))
-
-  @jax.jit
-  def _form(i: jax.Array, ii: jax.Array) -> tuple[jax.Array, jax.Array]:
-    return i + 1, i * steps + ii + 1
+    pg.add_task(ss, total=len(dl) * epochs, res="")
+  pg.advance(pg.tasks[ss], (start_epoch - 1) * len(dl))
 
   with PGThread(pg.pg, pg.tasks[ss]) as pts, PGThread(pg.pg, pg.tasks[es]) as pte:
-    for i in jnp.arange(start_epoch - 1, epochs):
-      if epochs > 1:
+    epoch = start_epoch
+    for d in dl.viter(epochs, chunks, epoch_bias=start_epoch):
+      if d.epoch != epoch:
         pte.completed += 1
-      for ii, x, p in zip(jnp.arange(steps), ds.xs[i], ds.pad[i]):
-        pts.completed += 1
-        yield DState(transform(x) if transform else x, p, *_form(i, ii), name=prefix)
-
-    pte.completed, pts.completed = _form(i, ii)
+        epoch = d.epoch
+      pts.completed += 1
+      yield d
 
 
 def __test() -> None:
   """Test."""
   pg = PG.init_progress(extra_columns=(RESC,))
   keys = Keys.from_int_or_key(42)
-  with pg:
-    pg.console.print("Drop Last: False, Auto Pad: True")
-    dl = IdxDataloader(314430, 256, drop_last=False)
 
-    for i in es_loop(dl, pg, epochs=300, keys=keys, prefix="DFAT", start_epoch=10):
-      # pg.update_res(
-      #   "DFAT-S", {"epoch": i.epoch.item(), "step": i.step.item(), "name": i.name}
-      # )
+  pg.console.print("Drop Last: False, Auto Pad: True")
+
+  dl = DataLoader(314430, 256, drop_last=False, shuffle=True, key=keys(0))
+  with pg:
+    for d in es_loop(dl, pg, epochs=300):  # noqa: B007
       continue
-    pg.console.print(i)
-    pg.console.print("Drop Last: True, Auto Pad: True")
-    dl = IdxDataloader(10, 3, drop_last=True)
-    for i in es_loop(dl, pg, keys, prefix="DTAT"):
-      pg.console.print(i)
+    pg.console.print(d)  # type: ignore
+  # for epoch in tqdm(jnp.arange(300)):
+  #   for i in dl(epoch):
+  #     continue
+  #   continue
+  # for d in tqdm(dl.viter(300), total=300 * len(dl)):
+  #   continue
+  # pg.console.print(i)
+  # pg.console.print("Drop Last: True, Auto Pad: True")
+  # dl = IdxDataloader(10, 3, drop_last=True)
+  # for i in es_loop(dl, pg, keys, prefix="DTAT"):
+  #   pg.console.print(i)
 
 
 if __name__ == "__main__":
