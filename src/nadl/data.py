@@ -132,7 +132,7 @@ def batch_index(
 
 
 class _Trans[_I, _O](Protocol):
-  def __call__(self, x: _I, *, key: PRNGKeyArray) -> _O: ...
+  def __call__(self, x: _I, *, key: PRNGKeyArray | None = None) -> _O: ...
 
 
 class DataLoader[T](Module):
