@@ -131,16 +131,20 @@ def batch_index(
   return _index
 
 
-class _Trans[_I, _O](Protocol):
-  def __call__(self, x: _I, *, key: PRNGKeyArray | None = None) -> _O: ...
+class Trans[_I, _O](Protocol):
+  """Transform protocol."""
+
+  def __call__(self, x: _I, *, key: PRNGKeyArray | None) -> _O:
+    """Transform Forwardl."""
+    ...
 
 
 class DataLoader[T](Module):
   """Simple data loader."""
 
   gen: _IDX_FN
-  embed: _Trans[Int[Array, " d"], T]
-  transform: _Trans[T, T]
+  embed: Trans[Int[Array, " d"], T]
+  transform: Trans[T, T]
   _default_epoch: Int[Array, ""]
   _length: int
   _data_length: int
@@ -154,16 +158,16 @@ class DataLoader[T](Module):
     shuffle: bool = False,
     key: PRNGKeyArray | None = None,
     *,
-    embed: _Trans[Int[Array, " d"], T] | None = None,
-    transform: _Trans[T, T] | None = None,
+    embed: Trans[Int[Array, " d"], T] | None = None,
+    transform: Trans[T, T] | None = None,
   ) -> None:
     """Initiate the dataloader."""
     self.gen = filter_jit(batch_index(length, batch_size, drop_last, shuffle, key=key))
     self.embed = (
-      embed if embed is not None else cast(_Trans[Int[Array, " d"], T], Identity())
+      embed if embed is not None else cast(Trans[Int[Array, " d"], T], Identity())
     )
     self.transform = (
-      transform if transform is not None else cast(_Trans[T, T], Identity())
+      transform if transform is not None else cast(Trans[T, T], Identity())
     )
     # why jit make it slower?
     # self.embed = filter_jit(self.embed)

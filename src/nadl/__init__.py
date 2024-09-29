@@ -37,7 +37,7 @@ NADL
 
 from . import data_v1 as datav1
 from .blocks import FastKANLayer, RadialBasisFunction, SplineLinear
-from .data import DataLoader, DState, batch_index, es_loop, fallback_argsort
+from .data import DataLoader, DState, Trans, batch_index, es_loop, fallback_argsort
 from .keys import Keys, new_key
 from .loops import PG, RESC, PGThread
 from .metrics import (
@@ -96,7 +96,7 @@ from .utils import (
   rle_array,
 )
 
-__version__ = "1.12.1"
+__version__ = "1.12.2"
 
 __all__ = [
   "PG",
@@ -115,6 +115,7 @@ __all__ = [
   "RadialBasisFunction",
   "SplineLinear",
   "T_savefn",
+  "Trans",
   "all_array",
   "average_precision_score",
   "batch_array_p",
