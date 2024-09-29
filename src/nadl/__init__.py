@@ -73,7 +73,7 @@ from .preprocessing import (
   select_scaler,
   standard_scaler,
 )
-from .states import BaseTrainState, T_savefn, state_fn
+from .states import BaseTrainState, BaseTrainStateWS, T_savefn, state_fn
 from .surgery import (
   get_bias,
   get_weight,
@@ -96,7 +96,7 @@ from .utils import (
   rle_array,
 )
 
-__version__ = "1.12.4"
+__version__ = "1.12.5"
 
 __all__ = [
   "PG",

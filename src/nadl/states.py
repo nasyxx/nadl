@@ -63,6 +63,35 @@ class BaseTrainState[T, M](eqx.Module):
   """Train state."""
 
   model: M
+  tx: optax.GradientTransformation
+  opt_state: optax.OptState
+  loss: jax.Array
+  step: jax.Array
+  conf: T
+
+  @classmethod
+  @abstractmethod
+  def init[**P](cls: type[Self], *args: P.args, **kwds: P.kwargs) -> Self:
+    """Create initial state."""
+    raise NotImplementedError
+
+  def apply_grads(self, loss: jax.Array, grads: eqx.Module) -> BaseTrainState[T, M]:
+    """Apply gradients."""
+    updates, opt_state = self.tx.update(
+      cast(optax.Updates, grads), self.opt_state, params=cast(optax.Params, self.model)
+    )
+    model = eqx.apply_updates(self.model, updates)
+    return eqx.tree_at(
+      lambda x: (x.model, x.opt_state, x.loss, x.step),
+      self,
+      (model, opt_state, loss, self.step + 1),
+    )
+
+
+class BaseTrainStateWS[T, M](eqx.Module):
+  """Train state."""
+
+  model: M
   state: eqx.nn.State
   tx: optax.GradientTransformation
   opt_state: optax.OptState
@@ -77,8 +106,8 @@ class BaseTrainState[T, M](eqx.Module):
     raise NotImplementedError
 
   def apply_grads(
-    self, loss: jax.Array, grads: eqx.Module, state: eqx.nn.State = _sentinel
-  ) -> BaseTrainState[T, M]:
+    self, loss: jax.Array, grads: eqx.Module, state: eqx.nn.State
+  ) -> BaseTrainStateWS[T, M]:
     """Apply gradients."""
     updates, opt_state = self.tx.update(
       cast(optax.Updates, grads), self.opt_state, params=cast(optax.Params, self.model)
