@@ -164,7 +164,7 @@ class DataLoader[T](Module):
     transform: Trans[T, T] | None = None,
   ) -> None:
     """Initiate the dataloader."""
-    self.gen = filter_jit(batch_index(length, batch_size, drop_last, shuffle, key=key))
+    self.gen = batch_index(length, batch_size, drop_last, shuffle, key=key)
     self.embed = (
       embed if embed is not None else cast(Trans[Int[Array, " d"], T], Identity())
     )
@@ -181,7 +181,7 @@ class DataLoader[T](Module):
 
   def __call__(self, epoch: Int[Array, ""] | None = None) -> Iterator[DState[T]]:
     """Get the indexes."""
-    data = self.gen(self._default_epoch) if epoch is None else self.gen(epoch)
+    data = filter_jit(self.gen)(self._default_epoch) if epoch is None else self.gen(epoch)
     for step, d, key in zip(jnp.arange(len(self)) + 1, data.xs, data.key):
       yield DState(
         self.transform(self.embed(d, key=key), key=key),
@@ -286,7 +286,9 @@ def __test() -> None:
 
   dl = DataLoader(314430, 256, drop_last=False, shuffle=True, key=keys(0))
   with pg:
-    for d in es_loop(dl, pg, epochs=300):  # noqa: B007
+    for d in es_loop(dl, pg, epochs=2):  # noqa: B007
+      continue
+    for d in es_loop(dl, pg, epochs=1):  # noqa: B007
       continue
     pg.console.print(d)  # type: ignore
   # for epoch in tqdm(jnp.arange(300)):
