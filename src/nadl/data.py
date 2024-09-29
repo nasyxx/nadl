@@ -181,7 +181,9 @@ class DataLoader[T](Module):
 
   def __call__(self, epoch: Int[Array, ""] | None = None) -> Iterator[DState[T]]:
     """Get the indexes."""
-    data = filter_jit(self.gen)(self._default_epoch) if epoch is None else self.gen(epoch)
+    data = (
+      filter_jit(self.gen)(self._default_epoch) if epoch is None else self.gen(epoch)
+    )
     for step, d, key in zip(jnp.arange(len(self)) + 1, data.xs, data.key):
       yield DState(
         self.transform(self.embed(d, key=key), key=key),
