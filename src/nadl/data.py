@@ -92,12 +92,13 @@ def batch_index(
   key: PRNGKeyArray | None = None,
 ) -> _IDX_FN:
   """Batchify the index."""
-  length = length if not drop_last else length - length % batch_size
-  pad = (batch_size - r) % batch_size if (r := length % batch_size) else 0
+  new_length = length if not drop_last else length - length % batch_size
+  pad = (batch_size - r) % batch_size if (r := new_length % batch_size) else 0
   drop_num = length % batch_size if drop_last else 0
-  length = length if not drop_last else length - drop_num
   _idxes = jnp.arange(length)
-  dlength = jnp.asarray(length // batch_size + (1 if not drop_num else 0))
+  dlength = jnp.asarray(
+    length // batch_size + (1 if (not drop_num) and length % batch_size else 0)
+  )
   depoch = jnp.asarray(0)
   if key is None:
     warn("Key is not provided, using 42 as random key seed.", stacklevel=1)
@@ -118,8 +119,9 @@ def batch_index(
     else:
       idxes = _idxes
 
+    _len = length if not drop_last else length - drop_num
     idxes = jnp.r_[idxes, jnp.full(pad, -1, idxes.dtype)]
-    idxes = idxes[: length + pad].reshape(-1, batch_size)
+    idxes = idxes[: _len + pad].reshape(-1, batch_size)
     return DState(
       idxes,
       jnp.where(idxes == -1, 1, 0).astype(bool),
