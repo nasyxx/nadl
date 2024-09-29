@@ -133,7 +133,7 @@ def batch_index(
   return _index
 
 
-class Trans[_I, _O](Protocol):
+class TransT[_I, _O](Protocol):
   """Transform protocol."""
 
   def __call__(self, x: _I, *, key: PRNGKeyArray | None) -> _O:
@@ -145,8 +145,8 @@ class DataLoader[T](Module):
   """Simple data loader."""
 
   gen: _IDX_FN
-  embed: Trans[Int[Array, " d"], T]
-  transform: Trans[T, T]
+  embed: TransT[Int[Array, " d"], T]
+  transform: TransT[T, T]
   _default_epoch: Int[Array, ""]
   _length: int
   _data_length: int
@@ -160,16 +160,16 @@ class DataLoader[T](Module):
     shuffle: bool = False,
     key: PRNGKeyArray | None = None,
     *,
-    embed: Trans[Int[Array, " d"], T] | None = None,
-    transform: Trans[T, T] | None = None,
+    embed: TransT[Int[Array, " d"], T] | None = None,
+    transform: TransT[T, T] | None = None,
   ) -> None:
     """Initiate the dataloader."""
     self.gen = batch_index(length, batch_size, drop_last, shuffle, key=key)
     self.embed = (
-      embed if embed is not None else cast(Trans[Int[Array, " d"], T], Identity())
+      embed if embed is not None else cast(TransT[Int[Array, " d"], T], Identity())
     )
     self.transform = (
-      transform if transform is not None else cast(Trans[T, T], Identity())
+      transform if transform is not None else cast(TransT[T, T], Identity())
     )
     # why jit make it slower?
     # self.embed = filter_jit(self.embed)
