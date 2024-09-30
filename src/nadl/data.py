@@ -94,6 +94,7 @@ def batch_index(
   """Batchify the index."""
   new_length = length if not drop_last else length - length % batch_size
   pad = (batch_size - r) % batch_size if (r := new_length % batch_size) else 0
+  pad = pad if pad != batch_size else 0
   drop_num = length % batch_size if drop_last else 0
   _idxes = jnp.arange(length)
   dlength = jnp.asarray(
@@ -184,14 +185,14 @@ class DataLoader[T](Module):
     data = (
       filter_jit(self.gen)(self._default_epoch) if epoch is None else self.gen(epoch)
     )
-    for step, d, key in zip(jnp.arange(len(self)) + 1, data.xs, data.key):
+    for step, d, p, k in zip(jnp.arange(len(self)) + 1, data.xs, data.pad, data.key):
       yield DState(
-        self.transform(self.embed(d, key=key), key=key),
-        data.pad,
+        self.transform(self.embed(d, key=k), key=k),
+        p,
         data.length,
         data.epoch,
         step,
-        key,
+        k,
       )
 
   @filter_jit
@@ -292,7 +293,7 @@ def __test() -> None:
       continue
     for d in es_loop(dl, pg, epochs=1):  # noqa: B007
       continue
-    pg.console.print(d)  # type: ignore
+    pg.console.print(jax.tree.map(jnp.shape, d))  # type: ignore
   # for epoch in tqdm(jnp.arange(300)):
   #   for i in dl(epoch):
   #     continue
