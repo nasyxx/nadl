@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
     
     
       
@@ -2851,8 +2851,7 @@ license  : GPL-3.0+</p>
 
               <details class="quote">
                 <summary>Source code in <code>nadl/data.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">144</span>
-<span class="normal">145</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
@@ -2950,7 +2949,10 @@ license  : GPL-3.0+</p>
 <span class="normal">240</span>
 <span class="normal">241</span>
 <span class="normal">242</span>
-<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DataLoader</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">Module</span><span class="p">):</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DataLoader</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Simple data loader.&quot;&quot;&quot;</span>
 
   <span class="n">gen</span><span class="p">:</span> <span class="n">_IDX_FN</span>
@@ -2990,15 +2992,17 @@ license  : GPL-3.0+</p>
 
   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">DState</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the indexes.&quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">filter_jit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_epoch</span><span class="p">)</span> <span class="k">if</span> <span class="n">epoch</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">xs</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">key</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span>
+      <span class="n">filter_jit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_epoch</span><span class="p">)</span> <span class="k">if</span> <span class="n">epoch</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">xs</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">pad</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">key</span><span class="p">):</span>
       <span class="k">yield</span> <span class="n">DState</span><span class="p">(</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">),</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">pad</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">),</span>
+        <span class="n">p</span><span class="p">,</span>
         <span class="n">data</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
         <span class="n">data</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span>
         <span class="n">step</span><span class="p">,</span>
-        <span class="n">key</span><span class="p">,</span>
+        <span class="n">k</span><span class="p">,</span>
       <span class="p">)</span>
 
   <span class="nd">@filter_jit</span>
@@ -3080,8 +3084,7 @@ license  : GPL-3.0+</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/data.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
-<span class="normal">183</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
 <span class="normal">184</span>
 <span class="normal">185</span>
 <span class="normal">186</span>
@@ -3091,17 +3094,22 @@ license  : GPL-3.0+</p>
 <span class="normal">190</span>
 <span class="normal">191</span>
 <span class="normal">192</span>
-<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">DState</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">DState</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Get the indexes.&quot;&quot;&quot;</span>
-  <span class="n">data</span> <span class="o">=</span> <span class="n">filter_jit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_epoch</span><span class="p">)</span> <span class="k">if</span> <span class="n">epoch</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
-  <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">xs</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">key</span><span class="p">):</span>
+  <span class="n">data</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">filter_jit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_epoch</span><span class="p">)</span> <span class="k">if</span> <span class="n">epoch</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+  <span class="p">)</span>
+  <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">xs</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">pad</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">key</span><span class="p">):</span>
     <span class="k">yield</span> <span class="n">DState</span><span class="p">(</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">),</span>
-      <span class="n">data</span><span class="o">.</span><span class="n">pad</span><span class="p">,</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">),</span>
+      <span class="n">p</span><span class="p">,</span>
       <span class="n">data</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
       <span class="n">data</span><span class="o">.</span><span class="n">epoch</span><span class="p">,</span>
       <span class="n">step</span><span class="p">,</span>
-      <span class="n">key</span><span class="p">,</span>
+      <span class="n">k</span><span class="p">,</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3124,8 +3132,7 @@ license  : GPL-3.0+</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/data.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">155</span>
-<span class="normal">156</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
 <span class="normal">157</span>
 <span class="normal">158</span>
 <span class="normal">159</span>
@@ -3149,7 +3156,8 @@ license  : GPL-3.0+</p>
 <span class="normal">177</span>
 <span class="normal">178</span>
 <span class="normal">179</span>
-<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">180</span>
+<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
   <span class="bp">self</span><span class="p">,</span>
   <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
   <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -3196,9 +3204,9 @@ license  : GPL-3.0+</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/data.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Get the length.&quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length</span>
 </code></pre></div></td></tr></table></div>
@@ -3222,10 +3230,7 @@ license  : GPL-3.0+</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/data.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">208</span>
 <span class="normal">209</span>
 <span class="normal">210</span>
 <span class="normal">211</span>
@@ -3249,7 +3254,10 @@ license  : GPL-3.0+</p>
 <span class="normal">229</span>
 <span class="normal">230</span>
 <span class="normal">231</span>
-<span class="normal">232</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">epoch_iter</span><span class="p">(</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">epoch_iter</span><span class="p">(</span>
   <span class="bp">self</span><span class="p">,</span> <span class="n">epoch_start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">epoch_end</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">DState</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Iterate with epochs.&quot;&quot;&quot;</span>
@@ -3298,12 +3306,12 @@ license  : GPL-3.0+</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/data.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">237</span>
 <span class="normal">238</span>
-<span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">viter</span><span class="p">(</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">viter</span><span class="p">(</span>
   <span class="bp">self</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">chunks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">epoch_bias</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">DState</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Iterate with epochs and chunks.&quot;&quot;&quot;</span>
@@ -6154,12 +6162,12 @@ Thus, please consider the shape of the input data as [b, ...].</p>
 
               <details class="quote">
                 <summary>Source code in <code>nadl/data.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
-<span class="normal">137</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">TransT</span><span class="p">[</span><span class="n">_I</span><span class="p">,</span> <span class="n">_O</span><span class="p">](</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="normal">141</span>
+<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">TransT</span><span class="p">[</span><span class="n">_I</span><span class="p">,</span> <span class="n">_O</span><span class="p">](</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Transform protocol.&quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">_I</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_O</span><span class="p">:</span>
@@ -6195,9 +6203,9 @@ Thus, please consider the shape of the input data as [b, ...].</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/data.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">_I</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_O</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">_I</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">PRNGKeyArray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_O</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Transform Forwardl.&quot;&quot;&quot;</span>
   <span class="o">...</span>
 </code></pre></div></td></tr></table></div>
@@ -6594,7 +6602,8 @@ receptor-antigen binding specificity.</p>
 <span class="normal">130</span>
 <span class="normal">131</span>
 <span class="normal">132</span>
-<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">batch_index</span><span class="p">(</span>
+<span class="normal">133</span>
+<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">batch_index</span><span class="p">(</span>
   <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
   <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
   <span class="n">drop_last</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -6605,6 +6614,7 @@ receptor-antigen binding specificity.</p>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;Batchify the index.&quot;&quot;&quot;</span>
   <span class="n">new_length</span> <span class="o">=</span> <span class="n">length</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">drop_last</span> <span class="k">else</span> <span class="n">length</span> <span class="o">-</span> <span class="n">length</span> <span class="o">%</span> <span class="n">batch_size</span>
   <span class="n">pad</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_size</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">%</span> <span class="n">batch_size</span> <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">:=</span> <span class="n">new_length</span> <span class="o">%</span> <span class="n">batch_size</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+  <span class="n">pad</span> <span class="o">=</span> <span class="n">pad</span> <span class="k">if</span> <span class="n">pad</span> <span class="o">!=</span> <span class="n">batch_size</span> <span class="k">else</span> <span class="mi">0</span>
   <span class="n">drop_num</span> <span class="o">=</span> <span class="n">length</span> <span class="o">%</span> <span class="n">batch_size</span> <span class="k">if</span> <span class="n">drop_last</span> <span class="k">else</span> <span class="mi">0</span>
   <span class="n">_idxes</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
   <span class="n">dlength</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
@@ -6785,10 +6795,7 @@ receptor-antigen binding specificity.</p>
 
             <details class="quote">
               <summary>Source code in <code>nadl/data.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">249</span>
 <span class="normal">250</span>
 <span class="normal">251</span>
 <span class="normal">252</span>
@@ -6816,7 +6823,10 @@ receptor-antigen binding specificity.</p>
 <span class="normal">274</span>
 <span class="normal">275</span>
 <span class="normal">276</span>
-<span class="normal">277</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">es_loop</span><span class="p">[</span><span class="n">T</span><span class="p">](</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">es_loop</span><span class="p">[</span><span class="n">T</span><span class="p">](</span>
   <span class="n">dl</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
   <span class="n">pg</span><span class="p">:</span> <span class="n">PG</span><span class="p">,</span>
   <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -8562,7 +8572,7 @@ receptor-antigen binding specificity.</p>
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
       
     
   </body>
