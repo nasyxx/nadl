@@ -96,7 +96,7 @@ from .utils import (
   rle_array,
 )
 
-__version__ = "1.12.6"
+__version__ = "1.12.7"
 
 __all__ = [
   "PG",

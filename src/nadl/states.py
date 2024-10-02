@@ -78,7 +78,9 @@ class BaseTrainState[T, M](eqx.Module):
   def apply_grads(self, loss: jax.Array, grads: eqx.Module) -> BaseTrainState[T, M]:
     """Apply gradients."""
     updates, opt_state = self.tx.update(
-      cast(optax.Updates, grads), self.opt_state, params=cast(optax.Params, self.model)
+      cast(optax.Updates, grads),
+      self.opt_state,
+      params=cast(optax.Params, eqx.filter(self.model, eqx.is_array)),
     )
     model = eqx.apply_updates(self.model, updates)
     return eqx.tree_at(
